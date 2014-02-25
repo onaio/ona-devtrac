@@ -27,8 +27,12 @@ Work to begin upon signing of contract.  Work to be completed by Jan 31st.
 
 https://docs.google.com/document/d/1wFDzKXR_YW75QK2Rl8GYjHzA2wkOcJTgH7TewwBXqjc/edit
 
-Dev Server 
+### Dev Server 
 
 http://jenkinsge.mountbatten.net/devtracmanual/
+
+Working API Endpoint
+
+http://jenkinsge.mountbatten.net/devtracmanual/api/views/api_vocabularies?display_id=placetypes
  
 
