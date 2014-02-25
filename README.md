@@ -26,5 +26,9 @@ Work to begin upon signing of contract.  Work to be completed by Jan 31st.
 ## API Documentation
 
 https://docs.google.com/document/d/1wFDzKXR_YW75QK2Rl8GYjHzA2wkOcJTgH7TewwBXqjc/edit
+
+Dev Server 
+
+http://jenkinsge.mountbatten.net/devtracmanual/
  
 
