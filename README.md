@@ -34,5 +34,11 @@ http://jenkinsge.mountbatten.net/devtracmanual/
 Working API Endpoint
 
 http://jenkinsge.mountbatten.net/devtracmanual/api/views/api_vocabularies?display_id=placetypes
+
+*Logins*
+
+* mlberg / unicef
+* ukanga / unicef
+
  
 
