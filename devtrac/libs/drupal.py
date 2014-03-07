@@ -57,6 +57,7 @@ class Drupal(object):
 
 class DrupalNode(object):
     """Class to represent a Drupal Node"""
+
     def __init__(self, title, node_type, value=None):
         if not isinstance(title, str):
             raise Exception(u"Expected a string for title")
@@ -69,9 +70,8 @@ class DrupalNode(object):
         if isinstance(value, str):
             self.body_value = value
 
-    @property
-    def json(self):
-        """JSON representation of a DrupalNode"""
+    def to_dict(self):
+        """Dict representation of a DrupalNode"""
         title = getattr(self, 'title')
         node_type = getattr(self, 'node_type')
         body_value = getattr(self, 'body_value')
@@ -83,5 +83,9 @@ class DrupalNode(object):
 
         if body_value:
             obj['bnd'] = [{'value': body_value}]
+        return obj
 
-        return json.dumps(obj)
+    @property
+    def json(self):
+        """JSON representation of a DrupalNode"""
+        return json.dumps(self.to_dict())

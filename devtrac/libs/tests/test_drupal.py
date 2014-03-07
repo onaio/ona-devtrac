@@ -51,11 +51,9 @@ class TestDrupalNode(TestCase):
         self.assertEqual(json.loads(node.json), json.loads(json_str))
 
     def test_drupalnode_invalid_title(self):
-        node = DrupalNode(None, 'article')
         with self.assertRaises(Exception):
-            node.json
+            DrupalNode(None, 'article')
 
     def test_drupalnode_invalid_node_type(self):
-        node = DrupalNode('title', None)
         with self.assertRaises(Exception):
-            node.json
+            DrupalNode('title', None)
