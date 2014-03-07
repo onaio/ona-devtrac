@@ -1,3 +1,4 @@
+import json
 import requests
 
 from urllib.parse import urljoin
@@ -40,6 +41,7 @@ class Drupal(object):
         data = {'username': username, 'password': password}
         self.request = requests.Session()
         self.response = self.request.post(self.login_url, data)
+
         if self.response.status_code == 200:
             data = self.response.json()
             self.uid = data.get('uid')
@@ -49,4 +51,37 @@ class Drupal(object):
             self.headers['X-CSRF-Token'] = self.token
         else:
             return False
+
         return True
+
+
+class DrupalNode(object):
+    """Class to represent a Drupal Node"""
+    def __init__(self, title, node_type, value=None):
+        if not isinstance(title, str):
+            raise Exception(u"Expected a string for title")
+
+        if not isinstance(node_type, str):
+            raise Exception(u"Expected a string for type")
+
+        self.title = title
+        self.node_type = node_type
+        if isinstance(value, str):
+            self.body_value = value
+
+    @property
+    def json(self):
+        """JSON representation of a DrupalNode"""
+        title = getattr(self, 'title')
+        node_type = getattr(self, 'node_type')
+        body_value = getattr(self, 'body_value')
+
+        obj = {
+            "title": title,
+            "type": node_type
+        }
+
+        if body_value:
+            obj['bnd'] = [{'value': body_value}]
+
+        return json.dumps(obj)
