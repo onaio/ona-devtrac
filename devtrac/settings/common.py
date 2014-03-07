@@ -88,3 +88,5 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=devtrac'
 ]
+
+DRUPAL_HOST = 'http://127.0.0.1'
