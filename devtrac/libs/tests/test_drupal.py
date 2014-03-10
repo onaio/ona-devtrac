@@ -56,8 +56,8 @@ class TestDrupalNode(TestCase):
         node_type = 'article'
         notes = 'A lot of text for the budy'
         node = DrupalNode(title, node_type, notes)
-        json_str = '{"title": "Title", "bnd": [{"value":'\
-            ' "A lot of text for the budy"}], "type": "article"}'
+        json_str = '{"title": "Title", "body": {"und": [{"value":'\
+            ' "A lot of text for the budy"}]}, "type": "article"}'
         self.assertEqual(json.loads(node.json), json.loads(json_str))
 
     def test_drupalnode_invalid_title(self):

@@ -52,6 +52,7 @@ class Drupal(object):
             self.session_id = data.get('sessid')
             self.session_name = data.get('session_name')
             self.headers['X-CSRF-Token'] = self.token
+            self.headers['Content-Type'] = 'application/json'
         else:
             return False
 
@@ -63,7 +64,7 @@ class Drupal(object):
         if not self.request and self.login():
             raise Exception(u"Please Login first!")
         node = DrupalNode(title, 'article', body)
-        self.response = self.request.post(self.node_url, node.to_dict(),
+        self.response = self.request.post(self.node_url, node.json,
                                           headers=self.headers)
         return self.response.json()
 
@@ -95,7 +96,7 @@ class DrupalNode(object):
         }
 
         if body_value:
-            obj['bnd'] = [{'value': body_value}]
+            obj['body'] = {'und': [{'value': body_value}]}
         return obj
 
     @property
