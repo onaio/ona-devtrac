@@ -39,6 +39,16 @@ class TestDrupal(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('"name":"api_user"', response.text)
 
+    def test_create_article(self):
+        self._drupal_login()
+        title = 'Test Title'
+        body = 'Test Body for article'
+        article = self.drupal.create_article(title, body)
+        self.assertIn('nid', article.keys())
+        self.assertIn('uri', article.keys())
+        # self.assertIn(title, article)
+        # self.assertIn(body, article)
+
 
 class TestDrupalNode(TestCase):
     def test_drupalnode(self):

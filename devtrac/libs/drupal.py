@@ -7,6 +7,7 @@ from urllib.parse import urljoin
 DRUPAL_CONNECT_PATH = 'api/system/connect.json'
 DRUPAL_LOGIN_PATH = 'api/user/login.json'
 DRUPAL_LOGOUT_PATH = 'api/user/logout.json'
+DRUPAL_NODE_PATH = 'api/node.json'
 
 
 class Drupal(object):
@@ -17,6 +18,7 @@ class Drupal(object):
     connect_url = None
     login_url = None
     logout_url = None
+    node_url = None
 
     token = None
     session_id = None
@@ -28,6 +30,7 @@ class Drupal(object):
         self.connect_url = urljoin(self.host, DRUPAL_CONNECT_PATH)
         self.login_url = urljoin(self.host, DRUPAL_LOGIN_PATH)
         self.logout_url = urljoin(self.host, DRUPAL_LOGOUT_PATH)
+        self.node_url = urljoin(self.host, DRUPAL_NODE_PATH)
 
     def connect(self):
         if self.request is not None and self.headers:
@@ -53,6 +56,16 @@ class Drupal(object):
             return False
 
         return True
+
+    def create_article(self, title, body):
+        """Create an article node"""
+
+        if not self.request and self.login():
+            raise Exception(u"Please Login first!")
+        node = DrupalNode(title, 'article', body)
+        self.response = self.request.post(self.node_url, node.to_dict(),
+                                          headers=self.headers)
+        return self.response.json()
 
 
 class DrupalNode(object):
