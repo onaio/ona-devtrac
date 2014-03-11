@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.test import TestCase
 
 from devtrac.libs.drupal import Drupal, DrupalNode
@@ -8,13 +9,14 @@ from devtrac.libs.drupal import Drupal, DrupalNode
 class TestDrupal(TestCase):
 
     def setUp(self):
-        self.drupal = Drupal()
+        self.drupal = Drupal(settings.DRUPAL_HOST)
 
-    def _drupal_login(self):
+    def _drupal_login(self, username=settings.DRUPAL_USERNAME,
+                      password=settings.DRUPAL_PASSWORD):
         self.assertIsNone(self.drupal.token)
         self.assertIsNone(self.drupal.session_id)
 
-        self.drupal.login(username='api_user', password='api_pass')
+        self.drupal.login(username=username, password=password)
 
         self.assertEqual(self.drupal.response.status_code, 200)
         self.assertIsNotNone(self.drupal.token)
