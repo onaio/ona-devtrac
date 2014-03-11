@@ -10,6 +10,42 @@ DRUPAL_LOGOUT_PATH = 'api/user/logout.json'
 DRUPAL_NODE_PATH = 'api/node.json'
 
 
+class DrupalNode(object):
+    """Class to represent a Drupal Node"""
+
+    def __init__(self, title, node_type, value=None):
+        if not isinstance(title, str):
+            raise Exception(u"Expected a string for title")
+
+        if not isinstance(node_type, str):
+            raise Exception(u"Expected a string for type")
+
+        self.title = title
+        self.node_type = node_type
+        if isinstance(value, str):
+            self.body_value = value
+
+    def to_dict(self):
+        """Dict representation of a DrupalNode"""
+        title = getattr(self, 'title')
+        node_type = getattr(self, 'node_type')
+        body_value = getattr(self, 'body_value')
+
+        obj = {
+            "title": title,
+            "type": node_type
+        }
+
+        if body_value:
+            obj['body'] = {'und': [{'value': body_value}]}
+        return obj
+
+    @property
+    def json(self):
+        """JSON representation of a DrupalNode"""
+        return json.dumps(self.to_dict())
+
+
 class Drupal(object):
     headers = {}
     host = None
@@ -103,39 +139,3 @@ class Drupal(object):
         self.response = self.request.delete(uri, headers=self.headers)
 
         return self.response.json()
-
-
-class DrupalNode(object):
-    """Class to represent a Drupal Node"""
-
-    def __init__(self, title, node_type, value=None):
-        if not isinstance(title, str):
-            raise Exception(u"Expected a string for title")
-
-        if not isinstance(node_type, str):
-            raise Exception(u"Expected a string for type")
-
-        self.title = title
-        self.node_type = node_type
-        if isinstance(value, str):
-            self.body_value = value
-
-    def to_dict(self):
-        """Dict representation of a DrupalNode"""
-        title = getattr(self, 'title')
-        node_type = getattr(self, 'node_type')
-        body_value = getattr(self, 'body_value')
-
-        obj = {
-            "title": title,
-            "type": node_type
-        }
-
-        if body_value:
-            obj['body'] = {'und': [{'value': body_value}]}
-        return obj
-
-    @property
-    def json(self):
-        """JSON representation of a DrupalNode"""
-        return json.dumps(self.to_dict())
