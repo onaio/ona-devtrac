@@ -68,6 +68,16 @@ class Drupal(object):
                                           headers=self.headers)
         return self.response.json()
 
+    def modify_article(self, uri, title, body):
+        """Modify an article node"""
+
+        if not self.request and self.login():
+            raise Exception(u"Please Login first!")
+        node = DrupalNode(title, 'article', body)
+        self.response = self.request.put(
+            '%s.json' % uri, node.json, headers=self.headers)
+        return self.response.json()
+
 
 class DrupalNode(object):
     """Class to represent a Drupal Node"""

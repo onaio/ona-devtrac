@@ -46,8 +46,19 @@ class TestDrupal(TestCase):
         article = self.drupal.create_article(title, body)
         self.assertIn('nid', article.keys())
         self.assertIn('uri', article.keys())
-        # self.assertIn(title, article)
-        # self.assertIn(body, article)
+
+    def test_modify_article(self):
+        self._drupal_login()
+        title = 'Test Title'
+        body = 'Test Body for article'
+        article = self.drupal.create_article(title, body)
+        self.assertIn('nid', article.keys())
+        self.assertIn('uri', article.keys())
+        uri = article['uri']
+        title = 'Test Title Edited'
+        body = 'Test Body for article Edited'
+        article = self.drupal.modify_article(uri, title, body)
+        self.assertEqual(article['uri'], uri)
 
 
 class TestDrupalNode(TestCase):
