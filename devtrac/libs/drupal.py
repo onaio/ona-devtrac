@@ -27,9 +27,9 @@ class DrupalNode(object):
 
     def to_dict(self):
         """Dict representation of a DrupalNode"""
-        title = getattr(self, 'title')
-        node_type = getattr(self, 'node_type')
-        body_value = getattr(self, 'body_value')
+        title = getattr(self, 'title', None)
+        node_type = getattr(self, 'node_type', None)
+        body_value = getattr(self, 'body_value', None)
 
         obj = {
             "title": title,
