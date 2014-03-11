@@ -20,6 +20,15 @@ class TestDrupal(TestCase):
         self.assertIsNotNone(self.drupal.token)
         self.assertIsNotNone(self.drupal.session_id)
 
+    def _add_article(self, title='Title', body="Body"):
+        self._drupal_login()
+        title = 'Test Title'
+        body = 'Test Body for article'
+        self.article = self.drupal.create_article(title, body)
+        self.assertIn('nid', self.article.keys())
+        self.assertIn('uri', self.article.keys())
+        return self.article
+
     def test_connect_anonymous_user(self):
         response = self.drupal.connect()
         self.assertEqual(response.status_code, 200)
@@ -40,40 +49,25 @@ class TestDrupal(TestCase):
         self.assertIn('"name":"api_user"', response.text)
 
     def test_create_article(self):
-        self._drupal_login()
-        title = 'Test Title'
-        body = 'Test Body for article'
-        article = self.drupal.create_article(title, body)
-        self.assertIn('nid', article.keys())
-        self.assertIn('uri', article.keys())
+        self._add_article()
 
     def test_modify_article(self):
-        self._drupal_login()
-        title = 'Test Title'
-        body = 'Test Body for article'
-        article = self.drupal.create_article(title, body)
-        self.assertIn('nid', article.keys())
-        self.assertIn('uri', article.keys())
-        uri = article['uri']
+        self._add_article()
+        uri = self.article['uri']
         title = 'Test Title Edited'
         body = 'Test Body for article Edited'
         article = self.drupal.modify_article(uri, title, body)
         self.assertEqual(article['uri'], uri)
-
-    def _add_article(self, title='Title', body="Body"):
-        self._drupal_login()
-        title = 'Test Title'
-        body = 'Test Body for article'
-        self.article = self.drupal.create_article(title, body)
-        self.assertIn('nid', self.article.keys())
-        self.assertIn('uri', self.article.keys())
-        return self.article
 
     def test_delete_article(self):
         self._add_article()
         uri = self.article['uri']
         success = self.drupal.delete_article(uri)
         self.assertEqual(success, [True])
+
+    def tearDown(self):
+        if hasattr(self, 'drupal') and hasattr(self, 'article'):
+            self.drupal.delete_article(self.article['uri'])
 
 
 class TestDrupalNode(TestCase):
