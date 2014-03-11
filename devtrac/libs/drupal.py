@@ -94,15 +94,23 @@ class Drupal(object):
 
         return True
 
-    def create_article(self, title, body):
-        """Create an article node"""
+    def create_node(self, node):
+        if not isinstance(node, DrupalNode):
+            raise Exception(u"node %(node)s must be of instance `Drupalnode`")
 
         if not self.request and self.login():
             raise Exception(u"Please Login first!")
-        node = DrupalNode(title, 'article', body)
+
         self.response = self.request.post(self.node_url, node.json,
                                           headers=self.headers)
+
         return self.response.json()
+
+    def create_article(self, title, body):
+        """Create an article node"""
+        node = DrupalNode(title, 'article', body)
+
+        return self.create_node(node)
 
     def modify_article(self, uri, title, body):
         """Modify an article node"""
