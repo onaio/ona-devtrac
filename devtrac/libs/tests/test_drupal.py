@@ -63,6 +63,8 @@ class TestDrupal(TestCase):
         body = 'Test Body for article Edited'
         article = self.drupal.modify_article(uri, title, body)
         self.assertEqual(article['uri'], uri)
+        article = self.drupal.get_article(uri)
+        self.assertEqual(title, article['title'])
 
     def test_delete_article(self):
         self._add_article()
