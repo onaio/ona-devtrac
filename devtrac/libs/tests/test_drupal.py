@@ -24,16 +24,22 @@ class TestDrupal(TestCase):
 
     def _add_article(self, title='Title', body="Body"):
         self._drupal_login()
-        self.article = self.drupal.create_article(title, body)
-        self.assertIn('nid', self.article.keys())
-        self.assertIn('uri', self.article.keys())
+        article = self.drupal.create_article(title, body)
+        # skip test if user has no permission
+        if isinstance(article, list):
+            if article[0].startswith('Access denied for user'):
+                self.skipTest(article[0])
+        self.assertIsInstance(article, dict)
+        self.assertIn('nid', article.keys())
+        self.assertIn('uri', article.keys())
+        self.article = article
+
         return self.article
 
     def test_connect_anonymous_user(self):
         response = self.drupal.connect()
         self.assertEqual(response.status_code, 200)
-        self.assertIn('{"uid":0,"hostname":"127.0.0.1",'
-                      '"roles":{"1":"anonymous user"}', response.text)
+        self.assertIn('"roles":{"1":"anonymous user"}', response.text)
 
     def test_login_failed(self):
         self.drupal.login(username='demo', password='wrong_pass')
@@ -46,7 +52,7 @@ class TestDrupal(TestCase):
         self._drupal_login()
         response = self.drupal.connect()
         self.assertEqual(response.status_code, 200)
-        self.assertIn('"name":"api_user"', response.text)
+        self.assertIn('"name":"%s"' % settings.DRUPAL_USERNAME, response.text)
 
     def test_create_article(self):
         self._add_article()
