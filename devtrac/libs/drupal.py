@@ -78,6 +78,19 @@ class Drupal(object):
             '%s.json' % uri, node.json, headers=self.headers)
         return self.response.json()
 
+    def delete_article(self, uri):
+        """Delete an article node"""
+
+        if not self.request and not self.login():
+            raise Exception(u"Please Login first!")
+
+        if isinstance(uri, str) and not uri.endswith('.json'):
+            uri = u'%s.json' % uri
+
+        self.response = self.request.delete(uri, headers=self.headers)
+
+        return self.response.json()
+
 
 class DrupalNode(object):
     """Class to represent a Drupal Node"""

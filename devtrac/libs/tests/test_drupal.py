@@ -60,6 +60,21 @@ class TestDrupal(TestCase):
         article = self.drupal.modify_article(uri, title, body)
         self.assertEqual(article['uri'], uri)
 
+    def _add_article(self, title='Title', body="Body"):
+        self._drupal_login()
+        title = 'Test Title'
+        body = 'Test Body for article'
+        self.article = self.drupal.create_article(title, body)
+        self.assertIn('nid', self.article.keys())
+        self.assertIn('uri', self.article.keys())
+        return self.article
+
+    def test_delete_article(self):
+        self._add_article()
+        uri = self.article['uri']
+        success = self.drupal.delete_article(uri)
+        self.assertEqual(success, [True])
+
 
 class TestDrupalNode(TestCase):
     def test_drupalnode(self):
