@@ -22,8 +22,6 @@ class TestDrupal(TestCase):
 
     def _add_article(self, title='Title', body="Body"):
         self._drupal_login()
-        title = 'Test Title'
-        body = 'Test Body for article'
         self.article = self.drupal.create_article(title, body)
         self.assertIn('nid', self.article.keys())
         self.assertIn('uri', self.article.keys())
@@ -50,6 +48,13 @@ class TestDrupal(TestCase):
 
     def test_create_article(self):
         self._add_article()
+
+    def test_get_article(self):
+        self._add_article()
+        uri = self.article['uri']
+        node = self.drupal.get_article(uri)
+        self.assertEqual(node['path'], uri.replace('api/', ''))
+        self.assertEqual(node['title'], 'Title')
 
     def test_modify_article(self):
         self._add_article()
