@@ -13,6 +13,8 @@ DRUPAL_NODE_PATH = 'api/node.json'
 class DrupalNode(object):
     """Class to represent a Drupal Node"""
 
+    _node_dict = {}
+
     def __init__(self, title, node_type, value=None):
         if not isinstance(title, str):
             raise Exception(u"Expected a string for title")
@@ -25,25 +27,24 @@ class DrupalNode(object):
         if isinstance(value, str):
             self.body_value = value
 
-    def to_dict(self):
-        """Dict representation of a DrupalNode"""
+    def get_dict(self):
         title = getattr(self, 'title', None)
         node_type = getattr(self, 'node_type', None)
         body_value = getattr(self, 'body_value', None)
 
-        obj = {
+        self._node_dict.update({
             "title": title,
             "type": node_type
-        }
+        })
 
         if body_value:
-            obj['body'] = {'und': [{'value': body_value}]}
-        return obj
+            self._node_dict['body'] = {'und': [{'value': body_value}]}
+        return self._node_dict
 
     @property
     def json(self):
         """JSON representation of a DrupalNode"""
-        return json.dumps(self.to_dict())
+        return json.dumps(self.get_dict())
 
 
 class Drupal(object):
