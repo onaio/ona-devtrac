@@ -3,7 +3,7 @@ import json
 from django.conf import settings
 from django.test import TestCase
 
-from devtrac.libs.drupal import Drupal, DrupalNode
+from devtrac.libs.drupal import DrupalNode
 from devtrac.libs.tests.test_base import TestBase
 
 
