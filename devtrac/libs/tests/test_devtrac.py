@@ -1,5 +1,7 @@
 from devtrac.libs.tests.test_base import TestBase
-from devtrac.libs.devtrac import FieldTrip
+from devtrac.libs.devtrac.field_trip import FieldTrip
+from devtrac.libs.devtrac.site_visit import SiteVisit
+from devtrac.libs.devtrac.taxonomy_vocabulary import TAXONOMY_VOCABULARY_1
 
 
 class TestDevTrac(TestBase):
@@ -28,5 +30,16 @@ class TestDevTrac(TestBase):
 
         self.assertIsInstance(node, dict)
         self.skipTest(u"Fails on taxonomy_vocabulary_6, not sure why yet.")
+        self.assertIn('nid', node.keys())
+        self.assertIn('uri', node.keys())
+
+    def test_create_site_visit(self):
+        self._drupal_login()
+        st = SiteVisit('Visit at Place A')
+        st.set_site_visit(
+            '13/03/2014', TAXONOMY_VOCABULARY_1.NGO,
+            'Narrative data', 'summary data', 13974)
+        node = self.drupal.create_node(st)
+        self.assertIsInstance(node, dict)
         self.assertIn('nid', node.keys())
         self.assertIn('uri', node.keys())
