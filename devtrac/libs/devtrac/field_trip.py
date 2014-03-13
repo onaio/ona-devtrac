@@ -38,12 +38,8 @@ class FieldTrip(DrupalNode):
         OTHER: u"Other"
     }
     node_type = u'fieldtrip'
-    percent = 100
 
     def __init__(self, title, **kwargs):
-        if not isinstance(title, str):
-            raise Exception(u"Expected a string for title")
-
         if kwargs.get('node_type'):
             del kwargs['node_type']
 
