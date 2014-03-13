@@ -13,7 +13,7 @@ DRUPAL_NODE_PATH = 'api/node.json'
 class DrupalNode(object):
     """Class to represent a Drupal Node"""
 
-    _node_dict = {}
+    _node_dict = None
 
     def __init__(self, title, node_type, value=None):
         if not isinstance(title, str):
@@ -26,6 +26,7 @@ class DrupalNode(object):
         self.node_type = node_type
         if isinstance(value, str):
             self.body_value = value
+        self._node_dict = {}
 
     def get_dict(self):
         title = getattr(self, 'title', None)
@@ -45,6 +46,17 @@ class DrupalNode(object):
     def json(self):
         """JSON representation of a DrupalNode"""
         return json.dumps(self.get_dict())
+
+    def set_taxonomy_vocabulary(self, number, value):
+        self._node_dict.update(
+            {
+                'taxonomy_vocabulary_%s' % number: {
+                    'und': {
+                        'value': value
+                    }
+                }
+            }
+        )
 
 
 class Drupal(object):
