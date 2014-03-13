@@ -60,6 +60,4 @@ class FieldTrip(DrupalNode):
         })
 
     def add_administrative_boundary(self, location):
-        self._node_dict.update({
-            'taxonomy_vocabulary_6': {'und': [{'value': location}]}
-        })
+        self.set_taxonomy_vocabulary(6, location)
