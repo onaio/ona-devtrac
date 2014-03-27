@@ -5,6 +5,26 @@ from devtrac.libs.devtrac.taxonomy_vocabulary import TAXONOMY_VOCABULARY_1
 
 
 class TestDevTrac(TestBase):
+
+    def _create_field_trip(self, delete=False):
+        self._drupal_login()
+
+        ft = FieldTrip('Demo Field Trip')
+        ft.add_trip_purpose(FieldTrip.OTHER, 100)
+        ft.add_administrative_boundary(80)
+        ft.add_start_end_date('11/03/2014', '13/03/2014')
+        ft.add_proms_ta_id('UGDC/2014/03')
+        ft.add_user(self.drupal.user_target_id)
+        node = self.drupal.create_node(ft)
+
+        self.assertIsInstance(node, dict)
+        self.assertIn('nid', node.keys())
+        self.assertIn('uri', node.keys())
+        self.fieldtrip_node = node
+
+        if delete:
+            self.drupal.delete_node(node['uri'])
+
     def test_field_trip_invalid_instance(self):
         self._drupal_login()
 
@@ -18,27 +38,17 @@ class TestDevTrac(TestBase):
         self.assertEqual(ft.node_type, 'fieldtrip')
 
     def test_create_field_trip(self):
-        self._drupal_login()
-
-        ft = FieldTrip('Demo Field Trip')
-        ft.add_trip_purpose(FieldTrip.OTHER, 100)
-        ft.add_administrative_boundary(80)
-        ft._node_dict.update({'field_fieldtrip_start_end_date':
-                              {"und": [{'value': {'date': '11/03/2014'},
-                                        'value2': {'date': '13/03/2014'}}]}})
-        self.skipTest(u"500 response, not sure why yet.")
-        node = self.drupal.create_node(ft)
-
-        self.assertIsInstance(node, dict)
-        self.assertIn('nid', node.keys())
-        self.assertIn('uri', node.keys())
+        self._create_field_trip(delete=True)
 
     def test_create_site_visit(self):
-        self._drupal_login()
+        self._create_field_trip()
+        fieldtrip = self.drupal.get_node(self.fieldtrip_node['uri'])
+        target_id = u'%s (%s)' % (fieldtrip['title'], fieldtrip['nid'])
         st = SiteVisit('Visit at Place A')
         st.set_site_visit(
             '13/03/2014', TAXONOMY_VOCABULARY_1.NGO,
-            'Narrative data', 'summary data', 13974)
+            'Narrative data', 'summary data', target_id)
+        st._node_dict.update({'nid': fieldtrip})
         node = self.drupal.create_node(st)
         self.assertIsInstance(node, dict)
         self.assertIn('nid', node.keys())
