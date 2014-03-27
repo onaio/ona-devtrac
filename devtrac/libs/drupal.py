@@ -96,7 +96,9 @@ class Drupal(object):
 
         if self.response.status_code == 200:
             data = self.response.json()
-            self.uid = data.get('uid')
+            user = data.get('user')
+            if isinstance(user, dict):
+                self.uid = user.get('uid')
             self.token = data.get('token')
             self.session_id = data.get('sessid')
             self.session_name = data.get('session_name')
