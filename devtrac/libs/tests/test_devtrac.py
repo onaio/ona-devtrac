@@ -25,6 +25,10 @@ class TestDevTrac(TestBase):
         if delete:
             self.drupal.delete_node(node['uri'])
 
+    def test_delete_node_not_logged_in(self):
+        with self.assertRaises(Exception):
+            self.drupal.delete_node("http://127.0.0.1/api/node/1.json")
+
     def test_field_trip_invalid_instance(self):
         self._drupal_login()
 
@@ -44,7 +48,7 @@ class TestDevTrac(TestBase):
         self._create_field_trip()
         fieldtrip = self.drupal.get_node(self.fieldtrip_node['uri'])
         target_id = u'%s (%s)' % (fieldtrip['title'], fieldtrip['nid'])
-        st = SiteVisit('Visit at Place A')
+        st = SiteVisit('Visit at Place A', node_type='ftritem')
         st.set_site_visit(
             '13/03/2014', TAXONOMY_VOCABULARY_1.NGO,
             'Narrative data', 'summary data', target_id)

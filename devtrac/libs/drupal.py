@@ -153,9 +153,6 @@ class Drupal(object):
 
         return self.response.json()
 
-    def get_article(self, uri):
-        return self.get_node(uri)
-
     def delete_node(self, uri):
         """Delete a drupal node"""
 
@@ -168,10 +165,6 @@ class Drupal(object):
         self.response = self.request.delete(uri, headers=self.headers)
 
         return self.response.json()
-
-    def delete_article(self, uri):
-        """Delete an article node"""
-        return self.delete_node(uri)
 
     @property
     def user_target_id(self):
