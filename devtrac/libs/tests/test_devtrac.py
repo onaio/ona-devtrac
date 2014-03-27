@@ -51,7 +51,8 @@ class TestDevTrac(TestBase):
         st = SiteVisit('Visit at Place A', node_type='ftritem')
         st.set_site_visit(
             '13/03/2014', TAXONOMY_VOCABULARY_1.NGO,
-            'Narrative data', 'summary data', target_id)
+            'Narrative data', 'summary data', target_id,
+            location='34.114095689096 2.9995385028608')
         st._node_dict.update({'nid': fieldtrip})
         node = self.drupal.create_node(st)
         self.assertIsInstance(node, dict)
