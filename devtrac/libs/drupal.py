@@ -73,6 +73,7 @@ class Drupal(object):
     session_id = None
     session_name = None
     uid = None
+    user_data = None
 
     def __init__(self, host="http://127.0.0.1"):
         self.host = host
@@ -80,6 +81,7 @@ class Drupal(object):
         self.login_url = urljoin(self.host, DRUPAL_LOGIN_PATH)
         self.logout_url = urljoin(self.host, DRUPAL_LOGOUT_PATH)
         self.node_url = urljoin(self.host, DRUPAL_NODE_PATH)
+        self.user_data = {}
 
     def connect(self):
         if self.request is not None and self.headers:
@@ -99,6 +101,7 @@ class Drupal(object):
             user = data.get('user')
             if isinstance(user, dict):
                 self.uid = user.get('uid')
+                self.user_data = user
             self.token = data.get('token')
             self.session_id = data.get('sessid')
             self.session_name = data.get('session_name')
@@ -137,7 +140,7 @@ class Drupal(object):
             '%s.json' % uri, node.json, headers=self.headers)
         return self.response.json()
 
-    def get_article(self, uri):
+    def get_node(self, uri):
         """Get an article node as json"""
 
         if not self.request and not self.login():
@@ -150,8 +153,11 @@ class Drupal(object):
 
         return self.response.json()
 
-    def delete_article(self, uri):
-        """Delete an article node"""
+    def get_article(self, uri):
+        return self.get_node(uri)
+
+    def delete_node(self, uri):
+        """Delete a drupal node"""
 
         if not self.request and not self.login():
             raise Exception(u"Please Login first!")
@@ -162,3 +168,11 @@ class Drupal(object):
         self.response = self.request.delete(uri, headers=self.headers)
 
         return self.response.json()
+
+    def delete_article(self, uri):
+        """Delete an article node"""
+        return self.delete_node(uri)
+
+    @property
+    def user_target_id(self):
+        return u"%s (%s)" % (self.user_data.get('realname'), self.uid)
