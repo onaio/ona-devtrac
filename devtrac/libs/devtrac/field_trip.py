@@ -61,3 +61,25 @@ class FieldTrip(DrupalNode):
 
     def add_administrative_boundary(self, location):
         self.set_taxonomy_vocabulary(6, location)
+
+    def add_start_end_date(self, start_date, end_date):
+        field = 'field_fieldtrip_start_end_date'
+        und = [{
+            'value': {'date': start_date},
+            'value2': {'date': end_date}
+        }]
+        self._node_dict.update({field: {'und': und}})
+
+    def add_proms_ta_id(self, ta_id):
+        field = 'field_fieldtrip_proms_ta_id'
+        und = [{
+            'value': ta_id
+        }]
+        self._node_dict.update({field: {'und': und}})
+
+    def add_user(self, user):
+        field = 'field_fieldtrip_user'
+        und = [{
+            'target_id': user
+        }]
+        self._node_dict.update({field: {'und': und}})
