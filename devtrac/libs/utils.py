@@ -38,7 +38,34 @@ def process_site_visit_submission(data):
 
 
 def process_road_side_submission(data):
-    pass
+    """Return a Road Side Report drupal node for processing with devtrac site
+    """
+
+    field_place_lat_long = data.get('roadside_group/field_ftritem_lat_long')
+    title = data.get('roadside_group/roadside_title')
+    taxonomy_vocabulary_6 = data.get('roadside_group/roadside_district')
+    taxonomy_vocabulary_8 = data.get('roadside_group/sector')
+    date_visited = data.get('site_visit_group/field_ftritem_date_visited')
+    public_summary = data.get('roadside_group/field_ftritem_public_summary')
+    narrative = data.get('roadside_group/field_ftritem_narrative')
+
+    site_visit = SiteVisit(title)
+
+    if isinstance(field_place_lat_long, str) and len(field_place_lat_long):
+        if len(field_place_lat_long.split()) > 1:
+            location = u' '.join(field_place_lat_long.split(' ')[:2])
+            site_visit.set_location(location)
+
+    if isinstance(date_visited, str):
+        date_visited = datetime.strptime(date_visited, '%Y-%m-%d')
+        site_visit.set_date_visited(date_visited.strftime('%d/%m/%Y'))
+
+    site_visit.set_taxonomy_vocabulary(6, taxonomy_vocabulary_6)
+    site_visit.set_taxonomy_vocabulary(8, taxonomy_vocabulary_8)
+    site_visit.set_public_summarry(public_summary)
+    site_visit.set_narrative(narrative)
+
+    return site_visit
 
 
 def process_human_interest_submission(data):
