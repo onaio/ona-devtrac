@@ -47,13 +47,23 @@ class DrupalNode(object):
         """JSON representation of a DrupalNode"""
         return json.dumps(self.get_dict())
 
-    def set_taxonomy_vocabulary(self, number, value):
+    def set_taxonomy_vocabulary(self, number, value, multiple=False):
+        und_value = {'value': value}
+
+        if multiple:
+            i = 0
+            for val in value:
+                if i == 0:
+                    und_value['value'] = val
+                else:
+                    und_value['value%d' % i] = val
+
+                i += 1
+
         self._node_dict.update(
             {
                 'taxonomy_vocabulary_%s' % number: {
-                    'und': {
-                        'value': value
-                    }
+                    'und': und_value
                 }
             }
         )
