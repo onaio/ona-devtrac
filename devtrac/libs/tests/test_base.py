@@ -1,3 +1,5 @@
+import os.path
+
 from django.conf import settings
 from django.test import TestCase
 
@@ -5,6 +7,9 @@ from devtrac.libs.drupal import Drupal
 
 
 class TestBase(TestCase):
+
+    fixtures_dir = os.path.realpath(os.path.join(os.path.dirname(__file__),
+                                                 'fixtures'))
 
     def setUp(self):
         self.drupal = Drupal(settings.DRUPAL_HOST)

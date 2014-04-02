@@ -31,7 +31,7 @@ def process_site_visit_submission(data):
 
     site_visit.set_taxonomy_vocabulary(1, taxonomy_vocabulary_1)
     site_visit.set_taxonomy_vocabulary(6, taxonomy_vocabulary_6)
-    site_visit.set_public_summarry('n/a')
+    site_visit.set_public_summary('n/a')
     site_visit.set_narrative('n/a')
 
     return site_visit
@@ -94,11 +94,16 @@ def process_human_interest_submission(data):
     return site_visit
 
 
-def process_json_submission(drupal, json_str, fieldtrip_id):
+def process_json_submission(drupal, data, fieldtrip_id):
     """Receives a json string from an odk submission,
     then creates appropriate Site report
     """
-    data = json.loads(json_str)
+    if isinstance(data, str):
+        data = json.loads(data)
+
+    if not isinstance(data, dict):
+        raise Exception(u"Expecting dictionary for `data` parameter")
+
     node = None
     site_report_type = data.get('site_report_type')
 
@@ -110,7 +115,7 @@ def process_json_submission(drupal, json_str, fieldtrip_id):
         node = process_human_interest_submission(data)
 
     if node is not None:
-        node.set_fieldtrip(fieldtrip_id)
+        node.set_field_trip(fieldtrip_id)
         return drupal.create_node(node)
 
     return None
