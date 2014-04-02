@@ -1,17 +1,15 @@
 from devtrac.libs.drupal import DrupalNode
 
 
-class SiteVisit(DrupalNode):
+class SiteReport(DrupalNode):
     node_type = u'ftritem'
-    taxonomy_vocabulary_7 = 209
 
     def __init__(self, title, **kwargs):
         if kwargs.get('node_type'):
             del kwargs['node_type']
 
-        super(SiteVisit, self).__init__(title, self.node_type, **kwargs)
+        super(SiteReport, self).__init__(title, self.node_type, **kwargs)
 
-        self.set_taxonomy_vocabulary(7, self.taxonomy_vocabulary_7)
         self.set_status()
 
     def set_status(self, status=1):
@@ -94,3 +92,27 @@ class SiteVisit(DrupalNode):
 
         if field_trip_id:
             self.set_field_trip(field_trip_id)
+
+
+class SiteVisitReport(SiteReport):
+    taxonomy_vocabulary_7 = 209
+
+    def __init__(self, *args, **kwargs):
+        super(SiteVisitReport, self).__init__(*args, **kwargs)
+        self.set_taxonomy_vocabulary(7, self.taxonomy_vocabulary_7)
+
+
+class HumanInterestReport(SiteReport):
+    taxonomy_vocabulary_7 = 211
+
+    def __init__(self, *args, **kwargs):
+        super(HumanInterestReport, self).__init__(*args, **kwargs)
+        self.set_taxonomy_vocabulary(7, self.taxonomy_vocabulary_7)
+
+
+class RoadsideReport(SiteReport):
+    taxonomy_vocabulary_7 = 210
+
+    def __init__(self, *args, **kwargs):
+        super(RoadsideReport, self).__init__(*args, **kwargs)
+        self.set_taxonomy_vocabulary(7, self.taxonomy_vocabulary_7)

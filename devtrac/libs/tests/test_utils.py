@@ -18,11 +18,12 @@ class TestUtils(TestBase):
         self.assertIsInstance(response, dict)
         self.assertIn('uri', response)
         self.assertIn('nid', response)
+        warnings.warn(response['uri'])
 
     def test_process_roadside_submission(self):
         self._drupal_login()
 
-        fieldtrip_id = 'Devtrac Trip (15074)'
+        fieldtrip_id = 'Demo Field Trip (15152)'
         data = json.load(open(os.path.join(self.fixtures_dir,
                                            'roadside_report.json')))
         response = utils.process_json_submission(self.drupal, data,
@@ -43,3 +44,4 @@ class TestUtils(TestBase):
         self.assertIsInstance(response, dict)
         self.assertIn('uri', response)
         self.assertIn('nid', response)
+        warnings.warn(response['uri'])

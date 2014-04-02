@@ -2,7 +2,8 @@ import json
 
 from datetime import datetime
 
-from devtrac.libs.devtrac.site_visit import SiteVisit
+from devtrac.libs.devtrac.site_visit import (SiteVisitReport, RoadsideReport,
+                                             HumanInterestReport)
 
 SITE_VISIT_REPORT = '0'
 ROAD_SIDE_REPORT = '1'
@@ -18,7 +19,7 @@ def process_site_visit_submission(data):
     taxonomy_vocabulary_6 = data.get('site_visit_group/district')
     date_visited = data.get('site_visit_group/s_field_ftritem_date_visited')
 
-    site_visit = SiteVisit(title)
+    site_visit = SiteVisitReport(title)
 
     if isinstance(field_place_lat_long, str) and len(field_place_lat_long):
         if len(field_place_lat_long.split()) > 1:
@@ -49,7 +50,7 @@ def process_road_side_submission(data):
     public_summary = data.get('roadside_group/field_ftritem_public_summary')
     narrative = data.get('roadside_group/field_ftritem_narrative')
 
-    site_visit = SiteVisit(title)
+    site_visit = RoadsideReport(title)
 
     if isinstance(field_place_lat_long, str) and len(field_place_lat_long):
         if len(field_place_lat_long.split()) > 1:
@@ -78,7 +79,7 @@ def process_human_interest_submission(data):
     taxonomy_vocabulary_6 = data.get('human_interest/hi_district')
     date_visited = data.get('human_interest/hi_field_ftritem_date_visited')
 
-    site_visit = SiteVisit(title)
+    site_visit = HumanInterestReport(title)
 
     if isinstance(field_place_lat_long, str) and len(field_place_lat_long):
         if len(field_place_lat_long.split()) > 1:

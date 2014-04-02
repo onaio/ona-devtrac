@@ -1,5 +1,5 @@
 from devtrac.libs.tests.test_base import TestBase
-from devtrac.libs.devtrac.site_visit import SiteVisit
+from devtrac.libs.devtrac.site_visit import SiteVisitReport
 from devtrac.libs.devtrac.taxonomy_vocabulary import TAXONOMY_VOCABULARY_1
 
 
@@ -17,7 +17,7 @@ class TestDevTrac(TestBase):
         fieldtrip = self.drupal.get_node(self.fieldtrip_node['uri'])
         target_id = u'%s (%s)' % (fieldtrip['title'], fieldtrip['nid'])
         place = u'%s (%s)' % ('UMSC Office Kotido', '5547')
-        st = SiteVisit('Visit at Place A', node_type='ftritem')
+        st = SiteVisitReport('Visit at Place A', node_type='ftritem')
         st.set_site_visit(
             '13/03/2014', TAXONOMY_VOCABULARY_1.NGO,
             'Narrative data', 'summary data', target_id,
