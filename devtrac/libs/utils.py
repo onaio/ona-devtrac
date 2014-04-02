@@ -69,7 +69,29 @@ def process_road_side_submission(data):
 
 
 def process_human_interest_submission(data):
-    pass
+    field_place_lat_long = data.get('human_interest/h_field_place_lat_long')
+    title = data.get('human_interest/hi_title')
+    taxonomy_vocabulary_1 = data.get('human_interest/hi_location_type')
+    taxonomy_vocabulary_6 = data.get('human_interest/hi_district')
+    date_visited = data.get('human_interest/hi_field_ftritem_date_visited')
+
+    site_visit = SiteVisit(title)
+
+    if isinstance(field_place_lat_long, str) and len(field_place_lat_long):
+        if len(field_place_lat_long.split()) > 1:
+            location = u' '.join(field_place_lat_long.split(' ')[:2])
+            site_visit.set_location(location)
+
+    if isinstance(date_visited, str):
+        date_visited = datetime.strptime(date_visited, '%Y-%m-%d')
+        site_visit.set_date_visited(date_visited.strftime('%d/%m/%Y'))
+
+    site_visit.set_taxonomy_vocabulary(1, taxonomy_vocabulary_1)
+    site_visit.set_taxonomy_vocabulary(6, taxonomy_vocabulary_6)
+    site_visit.set_public_summarry('n/a')
+    site_visit.set_narrative('n/a')
+
+    return site_visit
 
 
 def process_json_submission(drupal, json_str, fieldtrip_id):
