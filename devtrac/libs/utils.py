@@ -45,7 +45,7 @@ def process_road_side_submission(data):
     title = data.get('roadside_group/roadside_title')
     taxonomy_vocabulary_6 = data.get('roadside_group/roadside_district')
     taxonomy_vocabulary_8 = data.get('roadside_group/sector')
-    date_visited = data.get('site_visit_group/field_ftritem_date_visited')
+    date_visited = data.get('roadside_group/field_ftritem_date_visited')
     public_summary = data.get('roadside_group/field_ftritem_public_summary')
     narrative = data.get('roadside_group/field_ftritem_narrative')
 
@@ -60,9 +60,12 @@ def process_road_side_submission(data):
         date_visited = datetime.strptime(date_visited, '%Y-%m-%d')
         site_visit.set_date_visited(date_visited.strftime('%d/%m/%Y'))
 
+    if isinstance(taxonomy_vocabulary_8, str):
+        taxonomy_vocabulary_8 = taxonomy_vocabulary_8.split(' ')
+
     site_visit.set_taxonomy_vocabulary(6, taxonomy_vocabulary_6)
-    site_visit.set_taxonomy_vocabulary(8, taxonomy_vocabulary_8)
-    site_visit.set_public_summarry(public_summary)
+    site_visit.set_taxonomy_vocabulary(8, taxonomy_vocabulary_8, multiple=True)
+    site_visit.set_public_summary(public_summary)
     site_visit.set_narrative(narrative)
 
     return site_visit
@@ -88,7 +91,7 @@ def process_human_interest_submission(data):
 
     site_visit.set_taxonomy_vocabulary(1, taxonomy_vocabulary_1)
     site_visit.set_taxonomy_vocabulary(6, taxonomy_vocabulary_6)
-    site_visit.set_public_summarry('n/a')
+    site_visit.set_public_summary('n/a')
     site_visit.set_narrative('n/a')
 
     return site_visit
