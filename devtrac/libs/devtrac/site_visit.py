@@ -75,7 +75,7 @@ class SiteVisit(DrupalNode):
     def set_location(self, location):
         if location is not None:
             self._node_dict.update({'field_ftritem_lat_long': {
-                'und': [{'value': {'wkt': 'POINT (%s)' % location}}]
+                'und': [{'geom': 'POINT (%s)' % location}]
             }})
 
     def set_site_visit(self, date_visited, location_type, narrative, summary,
