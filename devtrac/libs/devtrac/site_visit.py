@@ -12,6 +12,10 @@ class SiteVisit(DrupalNode):
         super(SiteVisit, self).__init__(title, self.node_type, **kwargs)
 
         self.set_taxonomy_vocabulary(7, self.taxonomy_vocabulary_7)
+        self.set_status()
+
+    def set_status(self, status=1):
+        self._node_dict.update({'status': 1})
 
     def set_date_visited(self, date_visited):
         self._node_dict.update(
