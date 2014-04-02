@@ -6,7 +6,7 @@ from devtrac.libs.devtrac.taxonomy_vocabulary import TAXONOMY_VOCABULARY_1
 class TestDevTrac(TestBase):
 
     def test_delete_node_not_logged_in(self):
-        with self.assertRaises(Exception):
+        with self.assertRaisesRegex(Exception, u"Please Login first!"):
             self.drupal.delete_node("http://127.0.0.1/api/node/1.json")
 
     def test_create_site_visit(self):
