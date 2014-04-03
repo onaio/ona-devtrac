@@ -7,9 +7,9 @@ from devtrac.main.views import SubmissionPostView
 class SubmissionPostTest(TestCase):
     def test_post_json_submission(self):
         count = Submission.objects.count()
-        data = {"_id": 2, "name": "submission"}
+        data = '{"_id": 2, "name": "submission"}'
         factory = RequestFactory()
-        request = factory.post('/', data=data)
+        request = factory.post('/', data, 'application/json')
         view = SubmissionPostView.as_view()
         response = view(request)
 
