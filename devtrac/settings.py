@@ -92,3 +92,6 @@ NOSE_ARGS = [
 DRUPAL_HOST = 'http://127.0.0.1'
 DRUPAL_USERNAME = 'api_user'
 DRUPAL_PASSWORD = 'api_pass'
+
+# field trip to be used by tests
+TEST_FIELD_TRIP = u'A Demo Field Trip (15076)'
