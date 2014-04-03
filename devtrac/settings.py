@@ -37,6 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_nose',
+    'devtrac.main',
+    # add more apps above, south should always be last
+    'south'
 )
 
 MIDDLEWARE_CLASSES = (
