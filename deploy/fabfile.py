@@ -9,7 +9,7 @@ DEPLOYMENTS = {
     'default': {
         'home': '/var/www',
         'host_string':
-        'ubuntu@54.80.106.68',
+        'ubuntu@stage.ona.io',
         'project': 'devtrac',
         'key_filename': os.path.expanduser('~/.ssh/ona.pem'),
         'django_module': 'devtrac.preset.local_settings'
@@ -62,8 +62,8 @@ def change_local_settings(config_module, dbname, dbuser, dbpass,
 
 def system_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
     setup_env(deployment_name)
-    sudo('sh -c \'echo "deb http://apt.postgresql.org/pub/repos/apt/'
-         ' precise-pgdg main" >> /etc/apt/sources.list\'')
+    sudo('sh -c \'echo "deb http://apt.postgresql.org/pub/repos/apt/ '
+         'precise-pgdg main" > /etc/apt/sources.list.d/pgdg.list\'')
     sudo('wget --quiet -O - http://apt.postgresql.org/pub'
          '/repos/apt/ACCC4CF8.asc | apt-key add -')
     sudo('apt-get update')
@@ -79,7 +79,7 @@ def system_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
 
 
 def server_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
-    system_setup(deployment_name, dbuser, dbpass)
+    # system_setup(deployment_name, dbuser, dbpass)
     setup_env(deployment_name)
 
     sudo('mkdir -p %s' % env.home)
