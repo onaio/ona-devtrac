@@ -92,7 +92,7 @@ def server_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
     with lcd(current_working_dir):
         config_path = os.path.join(env.code_src, 'devtrac',
                                    'preset', 'local_settings.py')
-        put(config_path[1:], config_path)
+        put(os.path.join('context', config_path[1:]), config_path)
         change_local_settings(env.django_module, dbuser, dbuser, dbpass)
 
         put('./etc/init/devtrac.conf', '/etc/init/devtrac.conf', use_sudo=True)
