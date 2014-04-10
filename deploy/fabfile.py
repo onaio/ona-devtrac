@@ -87,7 +87,7 @@ def server_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
 
     with cd(env.home):
         run('git clone git@github.com:onaio/ona-devtrac.git devtrac'
-            ' || (cd devtrac && git fetch)')
+            ' || (cd devtrac && git fetch && git checkout origin/master)')
 
     with lcd(current_working_dir):
         config_path = os.path.join(env.code_src, 'devtrac',
@@ -98,6 +98,8 @@ def server_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
         put('./etc/init/devtrac.conf', '/etc/init/devtrac.conf', use_sudo=True)
         put('./etc/nginx/sites-available/nginx.conf',
             '/etc/nginx/sites-available/devtrac.conf', use_sudo=True)
+        sudo('(test -e /etc/nginx/sites-enabled/devtrac'
+             ' && unlink /etc/nginx/sites-enabled/devtrac) || echo "no file"')
         sudo('ln -s /etc/nginx/sites-available/devtrac.conf'
              ' /etc/nginx/sites-enabled/devtrac')
     data = {
