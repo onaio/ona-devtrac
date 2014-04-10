@@ -43,9 +43,6 @@ ENV PIP_DOWNLOAD_CACHE /pip_download_cache
 RUN mkdir -p $PIP_DOWNLOAD_CACHE
 RUN virtualenv $VENV
 
-RUN mkdir -p $APP_DIR
-ADD . $APP_DIR
-
 RUN mkdir -p /data/postgres
 RUN cp /tmp/context/var/lib/postgres/data/pg_hba.conf /data/postgres/pg_hba.conf
 RUN cp /tmp/context/var/lib/postgres/data/postgresql.conf /data/postgres/postgresql.conf
@@ -56,7 +53,11 @@ RUN rm /etc/nginx/nginx.conf
 RUN cp /tmp/context/etc/nginx/nginx.conf /etc/nginx/
 
 RUN mkdir -p /var/log/uwsgi && mkdir -p /var/log/devtrac/
-RUN (cd $APP_DIR && pip install -r requirements/common.pip)
+
+RUN mkdir -p $APP_DIR
+ADD . $APP_DIR
+
+RUN (. /var/www/.virtualenvs/devtrac/bin/activate && cd $APP_DIR && pip install -r requirements/common.pip)
 
 RUN cp /tmp/context/start /start
 RUN chmod 0755 /start

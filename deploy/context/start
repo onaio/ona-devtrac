@@ -61,6 +61,7 @@ command=/usr/local/bin/uwsgi
     -T
     --master
     --max-requests 5000
+    --virtualenv /var/www/.virtualenvs/devtrac
     --static-map /static=/var/www/devtrac/devtrac/static
     --static-map /static=/usr/local/lib/python2.7/dist-packages/django/contrib/admin/static
     --module devtrac.wsgi:application
@@ -73,10 +74,12 @@ stderr_logfile=/var/log/devtrac/app.err
 
 EOF
 
-(cd $APP_DIR && pip install --upgrade -r requirements/common.pip)
-(cd $APP_DIR && python manage.py syncdb --noinput)
-(cd $APP_DIR && python manage.py migrate)
-(cd $APP_DIR && python manage.py collectstatic --noinput)
+(. /var/www/.virtualenvs/devtrac/bin/activate && cd $APP_DIR && pip install --upgrade -r requirements/common.pip)
+(. /var/www/.virtualenvs/devtrac/bin/activate && cd $APP_DIR && python manage.py syncdb --noinput)
+(. /var/www/.virtualenvs/devtrac/bin/activate && cd $APP_DIR && python manage.py migrate)
+(. /var/www/.virtualenvs/devtrac/bin/activate && cd $APP_DIR && python manage.py collectstatic --noinput)
+
+service nginx start
 
 supervisord -c $SUPERVISOR_CONF -n
 
