@@ -3,3 +3,4 @@ django_nose
 jsonfield
 requests
 south
+psycopg2
