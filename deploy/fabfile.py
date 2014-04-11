@@ -123,4 +123,4 @@ def server_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
     sudo('/etc/init.d/nginx restart')
     sudo('mkdir -p /var/log/uwsgi')
     sudo('chown -R ubuntu /var/log/uwsgi')
-    sudo('start devtrac')
+    sudo('start devtrac || restart devtrac')
