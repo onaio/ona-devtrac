@@ -1,7 +1,7 @@
 import os
 import sys
 
-from fabric.api import env, run, cd, lcd, sudo, put
+from fabric.api import env, run, cd, lcd, sudo, put, prefix
 from fabric.contrib import files
 
 
@@ -105,11 +105,14 @@ def server_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
     data = {
         'venv': env.virtualenv, 'project': env.project
     }
-    run('WORKON_HOME=%(venv)s source /usr/local/bin/virtualenvwrapper.sh'
-        ' && WORKON_HOME=%(venv)s mkvirtualenv %(project)s' % data)
-    run('echo "export WORKON_HOME=%(venv)s" >> ~/.bashrc' % data)
-    run('echo "export DJANGO_SETTINGS_MODULE=%s" >> ~/.bashrc'
-        % env.django_module)
+    with prefix('source ~/.load_pyenv && export PYENV_VERSION=3.4.0'):
+        with prefix('WORKON_HOME=%(venv)s' % data):
+            run('source '
+                '/home/ubuntu/.pyenv/versions/3.4.0/bin/virtualenvwrapper.sh'
+                ' && WORKON_HOME=%(venv)s mkvirtualenv %(project)s' % data)
+            run('echo "export WORKON_HOME=%(venv)s" >> ~/.bashrc' % data)
+            run('echo "export DJANGO_SETTINGS_MODULE=%s" >> ~/.bashrc'
+                % env.django_module)
 
     with cd(os.path.join(env.home, env.project)):
         run_in_virtualenv('pip install -r requirements/common.pip')

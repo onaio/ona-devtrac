@@ -4,3 +4,4 @@ jsonfield
 requests
 south
 psycopg2
+uwsgi
