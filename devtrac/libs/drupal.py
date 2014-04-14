@@ -1,7 +1,12 @@
 import json
 import requests
 
-from urllib.parse import urljoin
+try:
+    # python 2.7.x or below
+    from urllib2.urlparse import urljoin
+except ImportError:
+    # python 3
+    from urllib.parse import urljoin
 
 
 DRUPAL_CONNECT_PATH = 'api/system/connect.json'
