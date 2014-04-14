@@ -3,10 +3,10 @@ import requests
 
 try:
     # python 2.7.x or below
-    from urllib2.urlparse import urljoin
+    from urllib2 import urlparse
 except ImportError:
     # python 3
-    from urllib.parse import urljoin
+    from urllib import parse as urlparse
 
 
 DRUPAL_CONNECT_PATH = 'api/system/connect.json'
@@ -92,10 +92,10 @@ class Drupal(object):
 
     def __init__(self, host="http://127.0.0.1"):
         self.host = host
-        self.connect_url = urljoin(self.host, DRUPAL_CONNECT_PATH)
-        self.login_url = urljoin(self.host, DRUPAL_LOGIN_PATH)
-        self.logout_url = urljoin(self.host, DRUPAL_LOGOUT_PATH)
-        self.node_url = urljoin(self.host, DRUPAL_NODE_PATH)
+        self.connect_url = urlparse.urljoin(self.host, DRUPAL_CONNECT_PATH)
+        self.login_url = urlparse.urljoin(self.host, DRUPAL_LOGIN_PATH)
+        self.logout_url = urlparse.urljoin(self.host, DRUPAL_LOGOUT_PATH)
+        self.node_url = urlparse.urljoin(self.host, DRUPAL_NODE_PATH)
         self.user_data = {}
 
     def connect(self):
