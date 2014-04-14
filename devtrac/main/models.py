@@ -20,4 +20,5 @@ class Submission(models.Model):
     uri = models.CharField(max_length=255, null=True, blank=True)
 
     def processed_string(self):
-        return _(u"Yes") if self.processed else _(u"No")
+        return u'<a href="%s">%s</a>' % (self.uri, self.nid) \
+            if self.processed else _(u"No")
