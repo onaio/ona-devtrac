@@ -104,6 +104,7 @@ DRUPAL_PASSWORD = 'api_pass'
 
 # field trip to be used by tests
 TEST_FIELD_TRIP = u'A Demo Field Trip (15076)'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,

@@ -10,4 +10,4 @@ class HomeViewTest(TestBase):
         home_url = reverse('home')
         client = Client()
         response = client.get(home_url)
-        self.assertContains(response, 'Number of processed: 1')
+        self.assertContains(response, 'Total number of reports: 1')
