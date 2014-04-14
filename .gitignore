@@ -1,0 +1,9 @@
+*.pyc
+*.bak
+.coverage
+.DS_Store
+.idea
+db.sqlite3
+local_settings.py
+docs
+static/*
