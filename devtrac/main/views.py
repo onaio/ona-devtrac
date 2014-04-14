@@ -1,7 +1,7 @@
 import json
 
 from django.http import HttpResponse
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 
 from devtrac.main.models import Submission
 from devtrac.libs.views.mixins import CSRFExemptMixin
@@ -15,3 +15,20 @@ class SubmissionPostView(CSRFExemptMixin, View):
 
         return HttpResponse(json.dumps(response),
                             content_type='application/json')
+
+
+class HomeView(TemplateView):
+    template_name = 'home.html'
+
+    def get(self, *args, **kwargs):
+        submissions = Submission.objects.filter()
+        total_submissions = submissions.count()
+        processed = submissions.filter(processed=True)
+        num_processed = processed.count()
+        kwargs.update({
+            'submissions': submissions,
+            'total_submissions': total_submissions,
+            'num_processed': num_processed
+        })
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)

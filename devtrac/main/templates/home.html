@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load i18n %}
+{% load extra_filters %}
 
 {% block topbar %}
 
@@ -9,6 +10,24 @@
 
 {% block content %}
 
-<h3>{% trans 'Number of processed reports' %}</h3>
+<h3>{% trans 'Total number of reports: ' %}{{ total_submissions }}</h3>
+<h3>{% trans 'Number of processed: ' %}{{ num_processed }}</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Report</th>
+            <th>Processed</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for submission in submissions %}
+        <tr>
+            <td>{{ submission.data|get:"_id" }}</td>
+            <td>{{ submission.processed_string }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}

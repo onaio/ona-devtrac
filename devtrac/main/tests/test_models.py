@@ -1,11 +1,6 @@
-from django.test import TestCase
-
-from devtrac.main.models import Submission
+from devtrac.main.tests.test_base import TestBase
 
 
-class SubmissionTest(TestCase):
+class SubmissionTest(TestBase):
     def test_submission_model(self):
-        data = {"_id": 2, "name": "submission"}
-        submission = Submission(data=data, processed=True)
-        submission.save()
-        self.assertEqual(submission, Submission.objects.get(pk=submission.pk))
+        self._add_submission()
