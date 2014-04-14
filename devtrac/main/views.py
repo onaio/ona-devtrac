@@ -47,7 +47,8 @@ class HomeView(TemplateView):
         kwargs.update({
             'submissions': submissions,
             'total_submissions': total_submissions,
-            'num_processed': num_processed
+            'num_processed': num_processed,
+            'ona_api_uri': settings.ONA_API_URI_DEVTRAC
         })
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)

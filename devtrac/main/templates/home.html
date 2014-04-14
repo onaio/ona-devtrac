@@ -23,7 +23,7 @@
     <tbody>
         {% for submission in submissions %}
         <tr>
-            <td>{{ submission.data|get:"_id" }}</td>
+            <td><a href="{{ ona_api_uri }}{{ submission.data|get:"_xform_id_string" }}/{{submission.data|get:"_id"}}.json">{{ submission.data|get:"_id" }}</a></td>
             <td>{{ submission.processed_string }}</td>
         </tr>
         {% endfor %}

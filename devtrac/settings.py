@@ -148,3 +148,5 @@ LOGGING = {
         }
     }
 }
+
+ONA_API_URI_DEVTRAC = 'https://ona.io/api/v1/data/devtrac/'
