@@ -7,3 +7,4 @@ db.sqlite3
 local_settings.py
 docs
 static/*
+__pycache__

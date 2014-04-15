@@ -98,7 +98,7 @@ NOSE_ARGS = [
     '--cover-package=devtrac'
 ]
 
-DRUPAL_HOST = 'http://127.0.0.1'
+DRUPAL_HOST = 'http://jenkinsge.mountbatten.net/devtracmanual/'
 DRUPAL_USERNAME = 'api_user'
 DRUPAL_PASSWORD = 'api_pass'
 

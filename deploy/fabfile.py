@@ -50,7 +50,9 @@ def setup_env(deployment_name):
 
 
 def change_local_settings(config_module, dbname, dbuser, dbpass,
-                          dbhost='127.0.0.1'):
+                          dbhost='127.0.0.1',
+                          drupal_user='duser',
+                          drupal_pass='dpwd'):
     config_path = os.path.join(
         env.code_src, config_module.replace('.', '/') + '.py')
     if files.exists(config_path):
@@ -78,7 +80,9 @@ def system_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
         ' -c "CREATE DATABASE %s OWNER %s;"' % (dbuser, dbuser))
 
 
-def server_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
+def server_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd",
+                 drupal_user='duser',
+                 drupal_pass='dpwd'):
     # system_setup(deployment_name, dbuser, dbpass)
     setup_env(deployment_name)
 
@@ -93,7 +97,8 @@ def server_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
         config_path = os.path.join(env.code_src, 'devtrac',
                                    'preset', 'local_settings.py')
         put(os.path.join('context', config_path[1:]), config_path)
-        change_local_settings(env.django_module, dbuser, dbuser, dbpass)
+        change_local_settings(env.django_module, dbuser, dbuser, dbpass,
+                              drupal_user=drupal_user, drupal_pass=drupal_pass)
 
         put('./etc/init/devtrac.conf', '/etc/init/devtrac.conf', use_sudo=True)
         put('./etc/nginx/sites-available/nginx.conf',
