@@ -22,6 +22,18 @@ class TestUtils(TestBase):
         self.assertIn('nid', response)
         warnings.warn(response['uri'])
 
+    def test_process_roadside_submission_null_taxonomy_8(self):
+        self._drupal_login()
+
+        data = json.load(open(os.path.join(self.fixtures_dir,
+                                           'roadside_report_50368.json')))
+        response = utils.process_json_submission(self.drupal, data,
+                                                 self.field_trip)
+        self.assertIsInstance(response, dict)
+        self.assertIn('uri', response)
+        self.assertIn('nid', response)
+        warnings.warn(response['uri'])
+
     def test_process_roadside_submission(self):
         self._drupal_login()
 

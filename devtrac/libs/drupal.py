@@ -53,9 +53,12 @@ class DrupalNode(object):
         return json.dumps(self.get_dict())
 
     def set_taxonomy_vocabulary(self, number, value, multiple=False):
+        if value is None:
+            return
+
         und_value = {'value': value}
 
-        if multiple:
+        if multiple and isinstance(value, list):
             i = 0
             for val in value:
                 if i == 0:
