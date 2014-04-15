@@ -60,6 +60,8 @@ def change_local_settings(config_module, dbname, dbuser, dbpass,
         files.sed(config_path, 'REPLACE_DB_USER', dbuser)
         files.sed(config_path, 'REPLACE_DB_PASSWORD', dbpass)
         files.sed(config_path, 'REPLACE_DB_HOST', dbhost)
+        files.sed(config_path, 'REPLACE_DRUPAL_USERNAME', drupal_user)
+        files.sed(config_path, 'REPLACE_DRUPAL_PASSWORD', drupal_pass)
 
 
 def system_setup(deployment_name, dbuser='dbuser', dbpass="dbpwd"):
