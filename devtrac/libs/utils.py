@@ -10,6 +10,19 @@ ROAD_SIDE_REPORT = '1'
 HUMAN_INTEREST_REPORT = '2'
 
 
+def _get_long_lat_string(lat_long_str):
+    """Gets a string "latitude longitude"
+
+    returns a string "longitude latitude"
+    """
+    if len(lat_long_str.split()) > 1:
+        tmp = lat_long_str.split(' ')[:2]
+        tmp.reverse()
+        return u' '.join(tmp)
+
+    return None
+
+
 def process_site_visit_submission(data, date_visited=None):
     """Return a SiteVisit drupal node for processing with devtrac site"""
 
@@ -23,8 +36,8 @@ def process_site_visit_submission(data, date_visited=None):
     site_visit = SiteVisitReport(title)
 
     if isinstance(field_place_lat_long, str) and len(field_place_lat_long):
-        if len(field_place_lat_long.split()) > 1:
-            location = u' '.join(field_place_lat_long.split(' ')[:2])
+        location = _get_long_lat_string(field_place_lat_long)
+        if location is not None:
             site_visit.set_location(location)
 
     if isinstance(date_visited, str):
@@ -55,8 +68,8 @@ def process_road_side_submission(data, date_visited=None):
     site_visit = RoadsideReport(title)
 
     if isinstance(field_place_lat_long, str) and len(field_place_lat_long):
-        if len(field_place_lat_long.split()) > 1:
-            location = u' '.join(field_place_lat_long.split(' ')[:2])
+        location = _get_long_lat_string(field_place_lat_long)
+        if location is not None:
             site_visit.set_location(location)
 
     if isinstance(date_visited, str):
@@ -85,8 +98,8 @@ def process_human_interest_submission(data, date_visited=None):
     site_visit = HumanInterestReport(title)
 
     if isinstance(field_place_lat_long, str) and len(field_place_lat_long):
-        if len(field_place_lat_long.split()) > 1:
-            location = u' '.join(field_place_lat_long.split(' ')[:2])
+        location = _get_long_lat_string(field_place_lat_long)
+        if location is not None:
             site_visit.set_location(location)
 
     if isinstance(date_visited, str):
