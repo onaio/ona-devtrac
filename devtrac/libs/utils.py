@@ -10,14 +10,15 @@ ROAD_SIDE_REPORT = '1'
 HUMAN_INTEREST_REPORT = '2'
 
 
-def process_site_visit_submission(data):
+def process_site_visit_submission(data, date_visited=None):
     """Return a SiteVisit drupal node for processing with devtrac site"""
 
     field_place_lat_long = data.get('site_visit_group/s_field_place_lat_long')
     title = data.get('site_visit_group/site_visit_title')
     taxonomy_vocabulary_1 = data.get('site_visit_group/location_type')
     taxonomy_vocabulary_6 = data.get('site_visit_group/district')
-    date_visited = data.get('site_visit_group/s_field_ftritem_date_visited')
+    date_visited = date_visited if date_visited else \
+        data.get('site_visit_group/s_field_ftritem_date_visited')
 
     site_visit = SiteVisitReport(title)
 
@@ -38,7 +39,7 @@ def process_site_visit_submission(data):
     return site_visit
 
 
-def process_road_side_submission(data):
+def process_road_side_submission(data, date_visited=None):
     """Return a Road Side Report drupal node for processing with devtrac site
     """
 
@@ -46,7 +47,8 @@ def process_road_side_submission(data):
     title = data.get('roadside_group/roadside_title')
     taxonomy_vocabulary_6 = data.get('roadside_group/roadside_district')
     taxonomy_vocabulary_8 = data.get('roadside_group/sector')
-    date_visited = data.get('roadside_group/field_ftritem_date_visited')
+    date_visited = date_visited if date_visited else \
+        data.get('roadside_group/field_ftritem_date_visited')
     public_summary = data.get('roadside_group/field_ftritem_public_summary')
     narrative = data.get('roadside_group/field_ftritem_narrative')
 
@@ -72,12 +74,13 @@ def process_road_side_submission(data):
     return site_visit
 
 
-def process_human_interest_submission(data):
+def process_human_interest_submission(data, date_visited=None):
     field_place_lat_long = data.get('human_interest/h_field_place_lat_long')
     title = data.get('human_interest/hi_title')
     taxonomy_vocabulary_1 = data.get('human_interest/hi_location_type')
     taxonomy_vocabulary_6 = data.get('human_interest/hi_district')
-    date_visited = data.get('human_interest/hi_field_ftritem_date_visited')
+    date_visited = date_visited if date_visited else \
+        data.get('human_interest/hi_field_ftritem_date_visited')
 
     site_visit = HumanInterestReport(title)
 
@@ -98,7 +101,7 @@ def process_human_interest_submission(data):
     return site_visit
 
 
-def process_json_submission(drupal, data, fieldtrip_id):
+def process_json_submission(drupal, data, fieldtrip_id, date_visited=None):
     """Receives a json string from an odk submission,
     then creates appropriate Site report
     """
@@ -112,11 +115,11 @@ def process_json_submission(drupal, data, fieldtrip_id):
     site_report_type = data.get('site_report_type')
 
     if site_report_type == SITE_VISIT_REPORT:
-        node = process_site_visit_submission(data)
+        node = process_site_visit_submission(data, date_visited)
     elif site_report_type == ROAD_SIDE_REPORT:
-        node = process_road_side_submission(data)
+        node = process_road_side_submission(data, date_visited)
     elif site_report_type == HUMAN_INTEREST_REPORT:
-        node = process_human_interest_submission(data)
+        node = process_human_interest_submission(data, date_visited)
 
     if node is not None:
         node.set_field_trip(fieldtrip_id)

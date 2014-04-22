@@ -2,6 +2,7 @@ import json
 import os
 import warnings
 
+from datetime import datetime
 from devtrac.libs.tests.test_base import TestBase
 from devtrac.libs import utils
 from django.conf import settings
@@ -15,8 +16,10 @@ class TestUtils(TestBase):
 
         data = json.load(open(os.path.join(self.fixtures_dir,
                                            'site_visit_report.json')))
+        date_visited = datetime.now().strftime('%Y-%m-%d')
         response = utils.process_json_submission(self.drupal, data,
-                                                 self.field_trip)
+                                                 self.field_trip,
+                                                 date_visited)
         self.assertIsInstance(response, dict)
         self.assertIn('uri', response)
         self.assertIn('nid', response)
@@ -27,8 +30,10 @@ class TestUtils(TestBase):
 
         data = json.load(open(os.path.join(self.fixtures_dir,
                                            'roadside_report_50368.json')))
+        date_visited = datetime.now().strftime('%Y-%m-%d')
         response = utils.process_json_submission(self.drupal, data,
-                                                 self.field_trip)
+                                                 self.field_trip,
+                                                 date_visited)
         self.assertIsInstance(response, dict)
         self.assertIn('uri', response)
         self.assertIn('nid', response)
@@ -39,8 +44,10 @@ class TestUtils(TestBase):
 
         data = json.load(open(os.path.join(self.fixtures_dir,
                                            'roadside_report.json')))
+        date_visited = datetime.now().strftime('%Y-%m-%d')
         response = utils.process_json_submission(self.drupal, data,
-                                                 self.field_trip)
+                                                 self.field_trip,
+                                                 date_visited)
         self.assertIsInstance(response, dict)
         self.assertIn('uri', response)
         self.assertIn('nid', response)
@@ -51,8 +58,10 @@ class TestUtils(TestBase):
 
         data = json.load(open(os.path.join(self.fixtures_dir,
                                            'human_interest.json')))
+        date_visited = datetime.now().strftime('%Y-%m-%d')
         response = utils.process_json_submission(self.drupal, data,
-                                                 self.field_trip)
+                                                 self.field_trip,
+                                                 date_visited)
         self.assertIsInstance(response, dict)
         self.assertIn('uri', response)
         self.assertIn('nid', response)
