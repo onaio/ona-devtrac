@@ -171,6 +171,26 @@ class Drupal(object):
 
         return self.response.json()
 
+    def get_node_list(self, parameters=None):
+        """Returns a list of nodes as json"""
+
+        if not self.request and not self.login():
+            raise Exception(u"Please Login first!")
+
+        uri = self.node_url
+        if isinstance(uri, str) and not uri.endswith('.json'):
+            uri = u'%s.json' % uri
+
+        params = {}
+        if isinstance(parameters, dict) and parameters:
+            for key, value in parameters.items():
+                params['parameters[%s]' % key] = value
+
+        self.response = self.request.get(
+            uri, params=params, headers=self.headers)
+
+        return self.response.json()
+
     def delete_node(self, uri):
         """Delete a drupal node"""
 

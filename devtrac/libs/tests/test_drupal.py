@@ -26,6 +26,12 @@ class TestDrupal(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('"name":"%s"' % settings.DRUPAL_USERNAME, response.text)
 
+    def test_get_node_list(self):
+        self._drupal_login()
+        data = self.drupal.get_node_list(parameters={
+            'type': 'fieldtrip', 'uid': '379'})
+        self.assertIsInstance(data, list)
+
 
 class TestDrupalNode(TestCase):
     def test_drupalnode(self):
