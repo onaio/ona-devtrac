@@ -1,3 +1,4 @@
+import csv
 import json
 
 from django.conf import settings
@@ -10,9 +11,14 @@ from devtrac.libs.utils import process_json_submission
 from devtrac.libs.drupal import Drupal
 
 
-def post_submission_to_devtrac(submission):
+def get_drupal_object():
     drupal = Drupal(settings.DRUPAL_HOST)
     drupal.login(settings.DRUPAL_USERNAME, settings.DRUPAL_PASSWORD)
+    return drupal
+
+
+def post_submission_to_devtrac(submission):
+    drupal = get_drupal_object()
     response = process_json_submission(drupal, submission.data,
                                        settings.TEST_FIELD_TRIP)
 
@@ -23,6 +29,30 @@ def post_submission_to_devtrac(submission):
         submission.save()
 
     return submission
+
+
+def get_fieldtrips():
+    drupal = get_drupal_object()
+    data = drupal.get_node_list(
+        parameters={'type': 'fieldtrip', 'uid': drupal.uid})
+    return data
+
+
+def get_fieldtrips_csv_response(fieldtrips=[]):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Desposition'] = 'attachment; filename=fieldtrips.csv'
+    headers = ['fieldtrip_key', 'nid', 'title']
+
+    writer = csv.writer(response)
+    writer.writerow(headers)
+
+    for fieldtrip in fieldtrips:
+        row = [u'%(title)s (%(nid)s)' % fieldtrip,
+               fieldtrip['nid'],
+               fieldtrip['title']]
+        writer.writerow(row)
+
+    return response
 
 
 class SubmissionPostView(CSRFExemptMixin, View):
@@ -52,3 +82,8 @@ class HomeView(TemplateView):
         })
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
+
+
+class FieldTripsView(View):
+    def get(self, *args, **kwargs):
+        return get_fieldtrips_csv_response(get_fieldtrips())

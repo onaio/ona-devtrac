@@ -13,6 +13,7 @@ urlpatterns = patterns(
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', views.HomeView.as_view(), name='home'),
+    url(r'^fieldtrips$', views.FieldTripsView.as_view(), name='fieldtrips'),
     url(r'^submission$', views.SubmissionPostView.as_view(),
         name='submission'),
 

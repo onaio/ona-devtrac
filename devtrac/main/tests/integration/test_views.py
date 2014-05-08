@@ -11,3 +11,13 @@ class HomeViewTest(TestBase):
         client = Client()
         response = client.get(home_url)
         self.assertContains(response, 'Total number of reports: 1')
+
+
+class FieldTripTest(TestBase):
+    def test_fieldtrips_csv_view(self):
+        self._add_submission()
+        url = reverse('fieldtrips')
+        client = Client()
+        response = client.get(url)
+
+        self.assertContains(response, 'fieldtrip_key,nid,title')
