@@ -8,12 +8,9 @@ from devtrac.main import views
 
 urlpatterns = patterns(
     '',
-    # Examples:
-    # url(r'^$', 'devtrac.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
     url(r'^$', views.HomeView.as_view(), name='home'),
-    url(r'^fieldtrips$', views.FieldTripsView.as_view(), name='fieldtrips'),
+    url(r'^fieldtrips\.(?P<format>(csv))$', views.FieldTripsView.as_view(),
+        name='fieldtrips'),
     url(r'^submission$', views.SubmissionPostView.as_view(),
         name='submission'),
 
