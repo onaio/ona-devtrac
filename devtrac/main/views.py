@@ -9,6 +9,7 @@ from devtrac.main.models import Submission
 from devtrac.libs.views.mixins import CSRFExemptMixin
 from devtrac.libs.utils import process_json_submission
 from devtrac.libs.drupal import Drupal
+from devtrac.libs.devtrac.constants import TYPE_FIELDTRIP, TYPE_PLACE
 
 
 def get_drupal_object():
@@ -34,22 +35,31 @@ def post_submission_to_devtrac(submission):
 def get_fieldtrips():
     drupal = get_drupal_object()
     data = drupal.get_node_list(
-        parameters={'type': 'fieldtrip', 'uid': drupal.uid})
+        parameters={'type': TYPE_FIELDTRIP, 'uid': drupal.uid})
     return data
 
 
-def get_fieldtrips_csv_response(fieldtrips=[]):
+def get_places():
+    drupal = get_drupal_object()
+    data = drupal.get_node_list(
+        parameters={'type': TYPE_PLACE})
+    return data
+
+
+def get_nodes_csv_response(nodes, name, headers, fields):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Desposition'] = 'attachment; filename=fieldtrips.csv'
-    headers = ['fieldtrip_key', 'nid', 'title']
+    response['Content-Desposition'] = 'attachment; filename=%s.csv' % name
+
+    assert type(nodes) is list
+    assert type(headers) is list
+    assert type(fields) is list
 
     writer = csv.writer(response)
     writer.writerow(headers)
 
-    for fieldtrip in fieldtrips:
-        row = [u'%(title)s (%(nid)s)' % fieldtrip,
-               fieldtrip['nid'],
-               fieldtrip['title']]
+    for node in nodes:
+        row = [u'%(title)s (%(nid)s)' % node] + \
+            [node[field] for field in fields]
         writer.writerow(row)
 
     return response
@@ -81,9 +91,14 @@ class HomeView(TemplateView):
             'ona_api_uri': settings.ONA_API_URI_DEVTRAC
         })
         context = self.get_context_data(**kwargs)
+
         return self.render_to_response(context)
 
 
 class FieldTripsView(View):
     def get(self, *args, **kwargs):
-        return get_fieldtrips_csv_response(get_fieldtrips())
+        headers = ['fieldtrip_key', 'nid', 'title']
+        fields = ['nid', 'title']
+
+        return get_nodes_csv_response(
+            get_fieldtrips(), 'fieldtrips', headers, fields)
