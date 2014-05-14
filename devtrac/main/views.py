@@ -110,4 +110,4 @@ class PlacesView(View):
         fields = ['nid', 'title']
 
         return get_nodes_csv_response(
-            get_fieldtrips(), 'places', headers, fields)
+            get_places(), 'places', headers, fields)
