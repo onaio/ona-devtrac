@@ -16,7 +16,7 @@ class HomeViewTest(TestBase):
 class FieldTripTest(TestBase):
     def test_fieldtrips_csv_view(self):
         self._add_submission()
-        url = reverse('fieldtrips')
+        url = reverse('fieldtrips', kwargs={'format': 'csv'})
         client = Client()
         response = client.get(url)
 
