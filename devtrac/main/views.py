@@ -102,3 +102,12 @@ class FieldTripsView(View):
 
         return get_nodes_csv_response(
             get_fieldtrips(), 'fieldtrips', headers, fields)
+
+
+class PlacesView(View):
+    def get(self, *args, **kwargs):
+        headers = ['place_key', 'nid', 'title']
+        fields = ['nid', 'title']
+
+        return get_nodes_csv_response(
+            get_fieldtrips(), 'places', headers, fields)

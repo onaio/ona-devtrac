@@ -11,6 +11,8 @@ urlpatterns = patterns(
     url(r'^$', views.HomeView.as_view(), name='home'),
     url(r'^fieldtrips\.(?P<format>(csv))$', views.FieldTripsView.as_view(),
         name='fieldtrips'),
+    url(r'^places\.(?P<format>(csv))$', views.PlacesView.as_view(),
+        name='places'),
     url(r'^submission$', views.SubmissionPostView.as_view(),
         name='submission'),
 

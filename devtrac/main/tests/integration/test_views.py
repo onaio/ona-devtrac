@@ -21,3 +21,13 @@ class FieldTripTest(TestBase):
         response = client.get(url)
 
         self.assertContains(response, 'fieldtrip_key,nid,title')
+
+
+class PlacesTest(TestBase):
+    def test_fieldtrips_csv_view(self):
+        self._add_submission()
+        url = reverse('places', kwargs={'format': 'csv'})
+        client = Client()
+        response = client.get(url)
+
+        self.assertContains(response, 'place_key,nid,title')
