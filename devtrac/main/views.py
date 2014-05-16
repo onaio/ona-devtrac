@@ -20,8 +20,7 @@ def get_drupal_object():
 
 def post_submission_to_devtrac(submission):
     drupal = get_drupal_object()
-    response = process_json_submission(drupal, submission.data,
-                                       settings.TEST_FIELD_TRIP)
+    response = process_json_submission(drupal, submission.data)
 
     if isinstance(response, dict) and 'nid' in response:
         submission.nid = response['nid']

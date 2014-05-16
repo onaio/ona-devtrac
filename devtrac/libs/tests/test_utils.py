@@ -18,21 +18,6 @@ class TestUtils(TestBase):
                                            'site_visit_report.json')))
         date_visited = datetime.now().strftime('%Y-%m-%d')
         response = utils.process_json_submission(self.drupal, data,
-                                                 self.field_trip,
-                                                 date_visited)
-        self.assertIsInstance(response, dict)
-        self.assertIn('uri', response)
-        self.assertIn('nid', response)
-        warnings.warn(response['uri'])
-
-    def test_process_roadside_submission_null_taxonomy_8(self):
-        self._drupal_login()
-
-        data = json.load(open(os.path.join(self.fixtures_dir,
-                                           'roadside_report_50368.json')))
-        date_visited = datetime.now().strftime('%Y-%m-%d')
-        response = utils.process_json_submission(self.drupal, data,
-                                                 self.field_trip,
                                                  date_visited)
         self.assertIsInstance(response, dict)
         self.assertIn('uri', response)
@@ -46,7 +31,6 @@ class TestUtils(TestBase):
                                            'roadside_report.json')))
         date_visited = datetime.now().strftime('%Y-%m-%d')
         response = utils.process_json_submission(self.drupal, data,
-                                                 self.field_trip,
                                                  date_visited)
         self.assertIsInstance(response, dict)
         self.assertIn('uri', response)
@@ -60,7 +44,6 @@ class TestUtils(TestBase):
                                            'human_interest.json')))
         date_visited = datetime.now().strftime('%Y-%m-%d')
         response = utils.process_json_submission(self.drupal, data,
-                                                 self.field_trip,
                                                  date_visited)
         self.assertIsInstance(response, dict)
         self.assertIn('uri', response)
