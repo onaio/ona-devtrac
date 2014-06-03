@@ -1,3 +1,4 @@
+import base64
 import json
 import requests
 
@@ -13,6 +14,7 @@ DRUPAL_CONNECT_PATH = 'api/system/connect.json'
 DRUPAL_LOGIN_PATH = 'api/user/login.json'
 DRUPAL_LOGOUT_PATH = 'api/user/logout.json'
 DRUPAL_NODE_PATH = 'api/node.json'
+DRUPAL_FILE_PATH = 'api/file.json'
 
 
 class DrupalNode(object):
@@ -99,6 +101,7 @@ class Drupal(object):
         self.login_url = urlparse.urljoin(self.host, DRUPAL_LOGIN_PATH)
         self.logout_url = urlparse.urljoin(self.host, DRUPAL_LOGOUT_PATH)
         self.node_url = urlparse.urljoin(self.host, DRUPAL_NODE_PATH)
+        self.file_url = urlparse.urljoin(self.host, DRUPAL_FILE_PATH)
         self.user_data = {}
 
     def connect(self):
@@ -207,3 +210,18 @@ class Drupal(object):
     @property
     def user_target_id(self):
         return u"%s (%s)" % (self.user_data.get('realname'), self.uid)
+
+    def upload_file(self, file_obj, filename):
+        "Upload a file to the file endpoint, returns the json response"
+
+        if not hasattr(file_obj, 'read'):
+            raise Exception(u"Expecting a file object for param `file_obj`")
+
+        if not self.request and not self.login():
+            raise Exception(u"Please Login first!")
+
+        data = json.dumps({"file": base64.b64encode(file_obj.read()).decode(),
+                           "filename": filename})
+        response = self.request.post(self.file_url, data, headers=self.headers)
+
+        return response.json()

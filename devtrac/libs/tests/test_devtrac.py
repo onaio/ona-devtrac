@@ -1,3 +1,5 @@
+import os
+
 from devtrac.libs.tests.test_base import TestBase
 from devtrac.libs.devtrac.site_visit import SiteVisitReport
 from devtrac.libs.devtrac.taxonomy_vocabulary import TAXONOMY_VOCABULARY_1
@@ -28,3 +30,11 @@ class TestDevTrac(TestBase):
         self.assertIsInstance(node, dict)
         self.assertIn('nid', node.keys())
         self.assertIn('uri', node.keys())
+
+    def test_file_upload(self):
+        self._drupal_login()
+        filename = os.path.join(self.fixtures_dir, 'devtrac.png')
+        response = self.drupal.upload_file(open(filename, 'rb'), 'devtrac.png')
+
+        self.assertIsInstance(response, dict)
+        self.assertIn('fid', response)
