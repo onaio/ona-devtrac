@@ -97,12 +97,15 @@ class Drupal(object):
 
     def __init__(self, host="http://127.0.0.1"):
         self.host = host
-        self.connect_url = urlparse.urljoin(self.host, DRUPAL_CONNECT_PATH)
-        self.login_url = urlparse.urljoin(self.host, DRUPAL_LOGIN_PATH)
-        self.logout_url = urlparse.urljoin(self.host, DRUPAL_LOGOUT_PATH)
-        self.node_url = urlparse.urljoin(self.host, DRUPAL_NODE_PATH)
-        self.file_url = urlparse.urljoin(self.host, DRUPAL_FILE_PATH)
+        self.connect_url = self.get_uri(DRUPAL_CONNECT_PATH)
+        self.login_url = self.get_uri(DRUPAL_LOGIN_PATH)
+        self.logout_url = self.get_uri(DRUPAL_LOGOUT_PATH)
+        self.node_url = self.get_uri(DRUPAL_NODE_PATH)
+        self.file_url = self.get_uri(DRUPAL_FILE_PATH)
         self.user_data = {}
+
+    def get_uri(self, path):
+        return urlparse.urljoin(self.host, path)
 
     def connect(self):
         if self.request is not None and self.headers:
