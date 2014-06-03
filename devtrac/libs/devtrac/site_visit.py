@@ -93,6 +93,10 @@ class SiteReport(DrupalNode):
         if field_trip_id:
             self.set_field_trip(field_trip_id)
 
+    def set_images(self, files):
+        if files:
+            self._node_dict.update({'field_ftritem_images': {'und': files}})
+
 
 class SiteVisitReport(SiteReport):
     taxonomy_vocabulary_7 = 209

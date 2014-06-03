@@ -3,6 +3,7 @@ import os
 import warnings
 
 from datetime import datetime
+from django.utils import six
 from devtrac.libs.tests.test_base import TestBase
 from devtrac.libs import utils
 from django.conf import settings
@@ -49,3 +50,8 @@ class TestUtils(TestBase):
         self.assertIn('uri', response)
         self.assertIn('nid', response)
         warnings.warn(response['uri'])
+
+    def test_get_file_from_ona(self):
+        filename = "1401788570553.jpg"
+        data = utils.get_file_from_ona(filename)
+        self.assertTrue(isinstance(data, six.string_types))

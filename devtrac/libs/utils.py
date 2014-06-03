@@ -1,4 +1,6 @@
+import base64
 import json
+import requests
 
 from datetime import datetime
 
@@ -22,7 +24,32 @@ def _get_long_lat_string(lat_long_str):
     return None
 
 
-def process_site_report_submission(data, date_visited=None):
+def get_file_from_ona(filename):
+    """Download attachment files from ona.io
+    return a base64 string of the file"""
+    uri = "https://ona.io/attachment/original?media_file=%s"
+    file_path = "devtrac/attachments/%s" % filename
+    response = requests.get(uri % file_path)
+
+    return base64.b64encode(response.content).decode()
+
+
+def upload_files(files, drupal):
+    uploaded = []
+
+    for f in files:
+        filename = f['photos/report_photo']
+        data = {"file": get_file_from_ona(filename),
+                "filename": filename}
+        fid = drupal._upload_file_json(data)
+
+        if isinstance(fid, dict) and 'fid' in fid:
+            uploaded.append({'fid': fid['fid']})
+
+    return uploaded
+
+
+def process_site_report_submission(data, date_visited=None, drupal=None):
     """Return a SiteVisit drupal node for processing with devtrac site"""
 
     fieldtrip = data.get('fieldtrip')
@@ -31,13 +58,13 @@ def process_site_report_submission(data, date_visited=None):
     taxonomy_vocabulary_1 = data.get('location_type')
     taxonomy_vocabulary_6 = data.get('district')
     taxonomy_vocabulary_7 = data.get('site_report_type')
-
     taxonomy_vocabulary_8 = data.get('sector')
     date_visited = date_visited if date_visited else \
         data.get('date_visited')
     place = data.get('place')
     summary = data.get('summary')
     narrative = data.get('narrative')
+    photos = data.get('photos')
 
     site_report = SiteReport(title)
 
@@ -64,6 +91,7 @@ def process_site_report_submission(data, date_visited=None):
     site_report.set_public_summary(summary)
     site_report.set_narrative(narrative)
     site_report.set_field_trip(fieldtrip)
+    site_report.set_images(upload_files(photos, drupal))
 
     return site_report
 
@@ -78,7 +106,7 @@ def process_json_submission(drupal, data, date_visited=None):
     if not isinstance(data, dict):
         raise Exception(u"Expecting dictionary for `data` parameter")
 
-    node = process_site_report_submission(data, date_visited)
+    node = process_site_report_submission(data, date_visited, drupal)
 
     if node is not None:
         return drupal.create_node(node)

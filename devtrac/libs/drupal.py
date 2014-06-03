@@ -211,6 +211,17 @@ class Drupal(object):
     def user_target_id(self):
         return u"%s (%s)" % (self.user_data.get('realname'), self.uid)
 
+    def _upload_file_json(self, data):
+        if not self.request and not self.login():
+            raise Exception(u"Please Login first!")
+
+        if isinstance(data, dict):
+            data = json.dumps(data)
+
+        response = self.request.post(self.file_url, data, headers=self.headers)
+
+        return response.json()
+
     def upload_file(self, file_obj, filename):
         "Upload a file to the file endpoint, returns the json response"
 
@@ -222,6 +233,5 @@ class Drupal(object):
 
         data = json.dumps({"file": base64.b64encode(file_obj.read()).decode(),
                            "filename": filename})
-        response = self.request.post(self.file_url, data, headers=self.headers)
 
-        return response.json()
+        return self._upload_file_json(data)
