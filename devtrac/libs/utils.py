@@ -4,6 +4,9 @@ import requests
 
 from datetime import datetime
 
+from django.conf import settings
+
+from devtrac.libs.drupal import Drupal
 from devtrac.libs.devtrac.site_visit import SiteReport
 
 SITE_VISIT_REPORT = '0'
@@ -112,3 +115,44 @@ def process_json_submission(drupal, data, date_visited=None):
         return drupal.create_node(node)
 
     return None
+
+
+def parse_api_questions():
+    drupal = Drupal(settings.DRUPAL_HOST)
+    drupal.login(username=settings.DRUPAL_USERNAME,
+                 password=settings.DRUPAL_PASSWORD)
+    questions_path = 'api/views/api_questions.json'
+    questions_uri = drupal.get_uri(questions_path)
+    questions = drupal.get_node(questions_uri)
+
+    for question in questions:
+        title = question.get('title')
+        taxonomy_vocabulary_1 = question.get('taxonomy_vocabulary_1')
+        if isinstance(taxonomy_vocabulary_1, dict)\
+                and 'und' in taxonomy_vocabulary_1:
+            taxonomy_vocabulary_1 = taxonomy_vocabulary_1['und'][0]['tid']
+
+        nid = question.get('nid')
+        question_type = question.get('questionnaire_question_type')
+        if isinstance(question_type, dict) and 'und' in question_type:
+            question_type = question_type['und'][0]['value']
+
+        options = question.get('questionnaire_question_options')
+        option_str = ""
+        if isinstance(options, dict) and 'und' in options:
+            option_list = []
+
+            for option in options["und"]:
+                option_list.append('"%s"' % option["value"])
+
+            option_str = ", ".join(option_list)
+
+        subject = question.get("field_question_subject")["und"][0]["tid"]
+
+        print(' %s, %s,%s,%s,"%s",%s' % (
+            subject, nid, question_type, taxonomy_vocabulary_1, title,
+            option_str))
+
+
+if __name__ == '__main__':
+    parse_api_questions()
