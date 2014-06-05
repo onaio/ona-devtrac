@@ -1,28 +1,31 @@
 FROM ubuntu
+
 MAINTAINER Ukang'a Dickson
+
+RUN /sbin/ip route | awk '/default/ { print "Acquire::http::Proxy \"http://"$3":8080\";" }' > /etc/apt/apt.conf.d/30proxy
 
 ADD ./deploy/context /tmp/context
 
-ENV CODENAME precise
+ENV CODENAME trusty
 
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $CODENAME-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+RUN echo "deb http://archive.ubuntu.com/ubuntu $CODENAME main universe" > /etc/apt/sources.list
+# RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $CODENAME-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 
-RUN cp /tmp/context/apt.postgresql.org.gpg /apt.postgresql.org.gpg
-ENV KEYRING /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg
-RUN test -e $KEYRING || touch $KEYRING
-RUN apt-key --keyring $KEYRING add /apt.postgresql.org.gpg
+# RUN cp /tmp/context/apt.postgresql.org.gpg /apt.postgresql.org.gpg
+# ENV KEYRING /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg
+# RUN test -e $KEYRING || touch $KEYRING
+# RUN apt-key --keyring $KEYRING add /apt.postgresql.org.gpg
 RUN apt-get update -yq
 
 ENV LANGUAGE en_US.UTF-8 ENV LANG en_US.UTF-8 ENV LC_ALL en_US.UTF-8
 RUN locale-gen en_US.UTF.8
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get install -yq  python-dev python-setuptools python-distribute \
-    python-pip libxml2-dev libxslt-dev make g++ libreadline-dev \
-    libncurses5-dev libpcre3-dev  libpq-dev libpcre3-dev git-core nginx \
-    postgresql-9.3 postgresql-contrib-9.3 Postgresql-9.3-postgis postgis \
-    sed vim-nox supervisor
+RUN apt-get install -yq  python3 python-dev python3-setuptools \
+    python-pip libxml2-dev libxslt-dev make \
+    git-core nginx \
+    postgresql-9.3 postgresql-contrib-9.3 \
+    sed supervisor
 
 RUN pip install virtualenv uwsgi
 
