@@ -55,3 +55,18 @@ class TestUtils(TestBase):
         filename = "1401788570553.jpg"
         data = utils.get_file_from_ona(filename)
         self.assertTrue(isinstance(data, six.string_types))
+
+    def test_process_submission_with_questionaires(self):
+        self._drupal_login()
+
+        data = json.load(open(os.path.join(self.fixtures_dir,
+                                           'questionnaires.json')))
+        date_visited = datetime.now().strftime('%Y-%m-%d')
+        response = utils.process_json_submission(self.drupal, data,
+                                                 date_visited)
+        self.assertIsInstance(response, dict)
+        self.assertIn('uri', response)
+        self.assertIn('nid', response)
+        warnings.warn(response['uri'])
+        questionare = utils.process_questions(self.drupal, response, data)
+        self.assertIsInstance(questionare, dict)

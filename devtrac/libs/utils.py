@@ -8,6 +8,7 @@ from django.conf import settings
 
 from devtrac.libs.drupal import Drupal
 from devtrac.libs.devtrac.site_visit import SiteReport
+from devtrac.libs.devtrac import constants
 
 SITE_VISIT_REPORT = '0'
 ROAD_SIDE_REPORT = '1'
@@ -113,6 +114,60 @@ def process_json_submission(drupal, data, date_visited=None):
 
     if node is not None:
         return drupal.create_node(node)
+
+    return None
+
+
+def get_question_value(q_num, value):
+    """Get value to send to devtrac from constants.answer_options"""
+    question = constants.questions.get(q_num)
+
+    if isinstance(question, dict):
+        q_type = question.get('type')
+
+        if q_type in ['select', 'radios']:
+            value = question.get('options').get(value, value)
+        elif q_type == 'checkboxes':
+            _value = {}
+            for val in value.split(' '):
+                key = question.get('options').get(val, val)
+                _value[key] = key
+            value = _value
+        elif q_type == 'number':
+            try:
+                value = int(value)
+            except:
+                pass
+
+    return value
+
+
+def get_questions_from_submission(data):
+    _data = {}
+    prefix = 'q_'
+
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if key.startswith(prefix) and key.lstrip(prefix).isnumeric():
+                q_num = key.lstrip(prefix)
+                _data[q_num] = get_question_value(key, value)
+
+    return _data
+
+
+def process_questions(drupal, node, data):
+    if isinstance(node, dict) and 'nid' and node:
+        questions = {
+            "qnid": node['nid']
+        }
+        questions["answers"] = get_questions_from_submission(data)
+
+        if questions["answers"]:
+            uri = drupal.get_uri(constants.QUESTIONNAIRE_SUBMIT_API_PATH)
+
+            import ipdb
+            ipdb.set_trace()
+            return drupal.post_data(uri, questions)
 
     return None
 

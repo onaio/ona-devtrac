@@ -136,6 +136,14 @@ class Drupal(object):
 
         return True
 
+    def post_data(self, uri, data):
+        if isinstance(uri, str) and not uri.endswith('.json'):
+            uri = u'%s.json' % uri
+
+        self.response = self.request.post(uri, data, headers=self.headers)
+
+        return self.response.json()
+
     def create_node(self, node):
         if not isinstance(node, DrupalNode):
             raise Exception(u"node %(node)s must be of instance `Drupalnode`")
@@ -143,10 +151,7 @@ class Drupal(object):
         if not self.request and self.login():
             raise Exception(u"Please Login first!")
 
-        self.response = self.request.post(self.node_url, node.json,
-                                          headers=self.headers)
-
-        return self.response.json()
+        return self.post_data(self.node_url, node.json)
 
     def create_article(self, title, body):
         """Create an article node"""
