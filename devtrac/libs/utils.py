@@ -165,8 +165,6 @@ def process_questions(drupal, node, data):
         if questions["answers"]:
             uri = drupal.get_uri(constants.QUESTIONNAIRE_SUBMIT_API_PATH)
 
-            import ipdb
-            ipdb.set_trace()
             return drupal.post_data(uri, questions)
 
     return None

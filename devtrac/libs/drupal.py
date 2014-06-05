@@ -140,6 +140,9 @@ class Drupal(object):
         if isinstance(uri, str) and not uri.endswith('.json'):
             uri = u'%s.json' % uri
 
+        if isinstance(data, dict):
+            data = json.dumps(data)
+
         self.response = self.request.post(uri, data, headers=self.headers)
 
         return self.response.json()

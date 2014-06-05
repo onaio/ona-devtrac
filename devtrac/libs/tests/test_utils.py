@@ -68,5 +68,6 @@ class TestUtils(TestBase):
         self.assertIn('uri', response)
         self.assertIn('nid', response)
         warnings.warn(response['uri'])
-        questionare = utils.process_questions(self.drupal, response, data)
-        self.assertIsInstance(questionare, dict)
+        q_id = utils.process_questions(self.drupal, response, data)
+        self.assertIsInstance(q_id, list)
+        self.assertTrue(q_id[0].isnumeric())
