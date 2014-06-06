@@ -71,3 +71,16 @@ class TestUtils(TestBase):
         q_id = utils.process_questions(self.drupal, response, data)
         self.assertIsInstance(q_id, list)
         self.assertTrue(q_id[0].isnumeric())
+
+    def test_process_submission_with_no_image(self):
+        self._drupal_login()
+
+        data = json.load(open(os.path.join(self.fixtures_dir,
+                                           'noimage.json')))
+        date_visited = datetime.now().strftime('%Y-%m-%d')
+        response = utils.process_json_submission(self.drupal, data,
+                                                 date_visited)
+        self.assertIsInstance(response, dict)
+        self.assertIn('uri', response)
+        self.assertIn('nid', response)
+        warnings.warn(response['uri'])

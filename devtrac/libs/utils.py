@@ -41,14 +41,15 @@ def get_file_from_ona(filename):
 def upload_files(files, drupal):
     uploaded = []
 
-    for f in files:
-        filename = f['photos/report_photo']
-        data = {"file": get_file_from_ona(filename),
-                "filename": filename}
-        fid = drupal._upload_file_json(data)
+    if isinstance(files, list):
+        for f in files:
+            filename = f['photos/report_photo']
+            data = {"file": get_file_from_ona(filename),
+                    "filename": filename}
+            fid = drupal._upload_file_json(data)
 
-        if isinstance(fid, dict) and 'fid' in fid:
-            uploaded.append({'fid': fid['fid']})
+            if isinstance(fid, dict) and 'fid' in fid:
+                uploaded.append({'fid': fid['fid']})
 
     return uploaded
 
