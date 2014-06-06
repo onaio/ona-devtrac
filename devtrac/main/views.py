@@ -7,7 +7,7 @@ from django.views.generic import View, TemplateView
 
 from devtrac.main.models import Submission
 from devtrac.libs.views.mixins import CSRFExemptMixin
-from devtrac.libs.utils import process_json_submission
+from devtrac.libs.utils import process_json_submission, process_questions
 from devtrac.libs.drupal import Drupal
 from devtrac.libs.devtrac.constants import TYPE_FIELDTRIP, TYPE_PLACE
 
@@ -23,6 +23,8 @@ def post_submission_to_devtrac(submission):
     response = process_json_submission(drupal, submission.data)
 
     if isinstance(response, dict) and 'nid' in response:
+        process_questions(drupal, response, submission.data)
+
         submission.nid = response['nid']
         submission.uri = response['uri']
         submission.processed = True
