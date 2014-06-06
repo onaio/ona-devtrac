@@ -145,13 +145,13 @@ def get_question_value(q_num, value):
 
 def get_questions_from_submission(data):
     _data = {}
-    prefix = 'q_'
+    prefix = 'questionnaire/q_'
 
     if isinstance(data, dict):
         for key, value in data.items():
             if key.startswith(prefix) and key.lstrip(prefix).isnumeric():
                 q_num = key.lstrip(prefix)
-                _data[q_num] = get_question_value(key, value)
+                _data[q_num] = get_question_value(q_num, value)
 
     return _data
 
